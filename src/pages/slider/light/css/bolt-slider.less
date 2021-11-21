@@ -1,25 +1,33 @@
-.no-js .bolt-slider__list-wrap {
+.bolt-no-js .bolt-slider__list-wrap {
 	overflow: initial;
 }
 
-.no-js .bolt-slider__list {
+.bolt-no-js .bolt-slider__list {
 	overflow-x: auto;
 	overflow-y: hidden;
 	scroll-snap-type: x mandatory;
 }
 
-.no-js .bolt-slider__item {
+.bolt-no-js .bolt-slider__item {
 	scroll-snap-align: center;
 }
 
-.no-js .prew,
-.no-js .next,
-.no-js .bolt-slider__pagination {
+.bolt-no-js .prew,
+.bolt-no-js .next,
+.bolt-no-js .bolt-slider__pagination {
 	display: none;
 }
 
+.bolt-slider__list-wrap {
+	overflow: hidden;
+}
+
 .bolt-slider__list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
 	display: flex;
+	align-items: flex-start;
 }
 
 .bolt-slider__item {

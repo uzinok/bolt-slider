@@ -16,6 +16,7 @@ footer {
 	width: 100%;
 	max-width: 900px;
 	padding: 20px 15px 30px;
+	box-sizing: border-box;
 }
 
 h1 {
@@ -43,12 +44,16 @@ code {
 	padding: 0 3px;
 }
 
-.pagination-btn {
+.bolt-slider__pagination-btn {
 	display: inline-block;
 	width: 20px;
 	height: 20px;
 	border-radius: 50%;
-	background-color: lightblue;
+	background-color: #add8e6;
+
+	&--active {
+		background-color: #88b7c7;
+	}
 }
 
 img {

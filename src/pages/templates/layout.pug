@@ -8,6 +8,8 @@ html(lang="ru")
 		meta(name="viewport", content="width=device-width, initial-scale=1.0")
 		title #{pageTitle}
 		link(rel="stylesheet", href="/css/style.css")
+		if page != 'index'
+			link(rel="stylesheet", href="./css/bolt-slider.css")
 	body
 
 		include header.pug

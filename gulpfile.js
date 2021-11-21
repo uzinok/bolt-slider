@@ -74,7 +74,7 @@ exports.lessToCss = lessToCss;
  * html
  */
 const htmlTo = () => {
-	return src(["src/pages/index.pug", "src/pages/**/*.pug"], {
+	return src(["src/pages/index.pug", "src/pages/slider/**/index.pug"], {
 			base: 'src/pages'
 		})
 		.pipe(plumber({

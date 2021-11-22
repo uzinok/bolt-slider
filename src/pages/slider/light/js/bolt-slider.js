@@ -13,10 +13,17 @@ class boltSlider {
 
 		// user options
 		this.slider = options.slider;
+
 		this.gap = options.gap || 0;
 		this.countVisible = options.countVisible || 0;
+
 		this.sliderPrew = options.sliderPrew || false;
 		this.sliderNext = options.sliderNext || false;
+
+		this.paginationWrap = options.paginationWrap || false;
+		this.paginationTag = options.paginationTag || 'span';
+		this.paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
+		this.paginationAria = options.paginationAria || 'of';
 
 		// slider options
 		this.width = 0;
@@ -37,8 +44,6 @@ class boltSlider {
 			this.setSliderSize();
 		});
 
-		// ставим слайдер на нужный слайд
-		this.sliderDraw();
 		// подготовка к движению слайдера
 		this.sliderToggle();
 	}
@@ -54,6 +59,9 @@ class boltSlider {
 				slide.style.marginRight = this.gap + 'px';
 			}
 		});
+
+		// ставим слайдер на нужный слайд
+		this.sliderDraw();
 	}
 
 	// подготовка к движению слайдера
@@ -83,11 +91,31 @@ class boltSlider {
 			})
 		}
 
+		if (this.paginationWrap) {
+
+			for (let i = 0; i < this.slideLength; i++) {
+				let btn = document.createElement(this.paginationTag);
+				btn.classList.add(this.paginationClass);
+				btn.dataset.count = i;
+
+				this.paginationWrap.append(btn);
+
+				if (this.paginationTag == 'button') {
+					btn.ariaLabel = this.paginationAria + ' ' + (i + 1);
+					btn.addEventListener('click', () => {
+						this.countVisible = i;
+						this.sliderDraw();
+					})
+				}
+			}
+
+		}
+
 	}
 
 	// Движение слайдера
 	sliderDraw() {
-		console.log('hi');
+		console.log(this.countVisible);
 		this.sliderList.style.transform = `translateX(-${(this.countVisible * this.width) + (this.gap * this.countVisible)}px)`;
 	}
 

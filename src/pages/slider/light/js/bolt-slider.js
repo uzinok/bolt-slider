@@ -35,6 +35,12 @@ class boltSlider {
 
 		// init slider
 		this.sliderInit();
+
+		// касание
+		this.startClientX = 0;
+		this.touchMove = 0;
+
+		this.touthMove();
 	}
 
 	sliderInit() {
@@ -116,7 +122,6 @@ class boltSlider {
 
 	// Движение слайдера
 	sliderDraw() {
-		console.log(this.countVisible);
 		this.sliderList.style.transform = `translateX(-${(this.countVisible * this.width) + (this.gap * this.countVisible)}px)`;
 	}
 
@@ -129,5 +134,56 @@ class boltSlider {
 			this.sliderList.style.transition = `transform 0ms ease-in-out, height 0ms ease-in-out`;
 		}, this.speed)
 	}
+
+	// касание
+	touthMove() {
+
+		this.sliderList.addEventListener("touchstart", (e) => {
+			this.startClientX = e.touches[0].clientX;
+		})
+
+		this.sliderList.addEventListener("touchmove", (e) => {
+			this.touchMove = this.startClientX - e.touches[0].clientX;
+			if (
+				((this.countVisible * this.width) + (this.gap * this.countVisible) + this.touchMove) >=
+				0
+			) {
+
+				if (
+					((this.countVisible * this.width) + (this.gap * this.countVisible) + this.touchMove) <=
+					(this.width * (this.slideLength - 1) + this.gap * (this.slideLength - 1))
+				) {
+					this.sliderList.style.transform = `translateX(-${(this.countVisible * this.width) + (this.gap * this.countVisible) + this.touchMove}px)`;
+				}
+			}
+
+		});
+
+		this.sliderList.addEventListener("touchend", (e) => {
+			if ((this.touchMove < 30) && this.touchMove > -30) {
+				return this.sliderAnimation();
+			}
+
+			if (this.touchMove > 0) {
+				this.countVisible++;
+				if (this.countVisible >= this.slideLength - 1) {
+					this.countVisible = this.slideLength - 1;
+				}
+				this.sliderAnimation();
+			}
+
+			if (this.touchMove < 0) {
+				this.countVisible--;
+				if (this.countVisible < 0) {
+					this.countVisible = 0;
+				}
+				this.sliderAnimation();
+			}
+
+			this.touchMove = 0;
+		})
+
+	}
+
 
 }

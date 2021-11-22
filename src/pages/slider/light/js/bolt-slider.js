@@ -32,6 +32,7 @@ class boltSlider {
 		this.sliderListWrap = this.slider.querySelector('.bolt-slider__list-wrap');
 		this.slides = this.sliderList.querySelectorAll('.bolt-slider__item');
 		this.slideLength = this.slides.length;
+		this.paginations = [];
 
 		// init slider
 		this.sliderInit();
@@ -49,10 +50,16 @@ class boltSlider {
 		this.setSliderSize();
 		window.addEventListener('resize', () => {
 			this.setSliderSize();
+
+			// ставим слайдер на нужный слайд
+			this.sliderDraw();
 		});
 
 		// подготовка к движению слайдера
 		this.sliderToggle();
+
+		// ставим слайдер на нужный слайд
+		this.sliderDraw();
 	}
 
 	setSliderSize() {
@@ -66,9 +73,6 @@ class boltSlider {
 				slide.style.marginRight = this.gap + 'px';
 			}
 		});
-
-		// ставим слайдер на нужный слайд
-		this.sliderDraw();
 	}
 
 	// подготовка к движению слайдера
@@ -99,30 +103,57 @@ class boltSlider {
 		}
 
 		if (this.paginationWrap) {
+			this.setPagination();
+		}
 
-			for (let i = 0; i < this.slideLength; i++) {
-				let btn = document.createElement(this.paginationTag);
-				btn.classList.add(this.paginationClass);
-				btn.dataset.count = i;
+	}
 
-				this.paginationWrap.append(btn);
+	setPagination() {
 
-				if (this.paginationTag == 'button') {
-					btn.ariaLabel = this.paginationAria + ' ' + (i + 1);
-					btn.addEventListener('click', () => {
-						this.countVisible = i;
-						this.sliderAnimation();
-					});
-				}
+		for (let i = 0; i < this.slideLength; i++) {
+			let btn = document.createElement(this.paginationTag);
+			btn.classList.add(this.paginationClass);
+			btn.dataset.count = i;
+
+			this.paginationWrap.append(btn);
+
+			if (this.paginationTag == 'button') {
+				btn.ariaLabel = this.paginationAria + ' ' + (i + 1);
+				btn.addEventListener('click', () => {
+					this.countVisible = i;
+					this.sliderAnimation();
+				});
+
+				this.paginations.push(btn);
 			}
 
 		}
-
 	}
 
 	// Движение слайдера
 	sliderDraw() {
 		this.sliderList.style.transform = `translateX(-${(this.countVisible * this.width) + (this.gap * this.countVisible)}px)`;
+
+		if (this.sliderPrew.disabled == true) {
+			this.sliderPrew.disabled = false;
+		}
+		if (this.sliderPrew && this.countVisible <= 0) {
+			this.sliderPrew.disabled = true;
+		}
+
+		if (this.sliderNext.disabled == true) {
+			this.sliderNext.disabled = false;
+		}
+		if (this.sliderNext && this.countVisible >= this.slideLength - 1) {
+			this.sliderNext.disabled = true;
+		}
+
+		if (this.paginationTag == 'button') {
+			if (this.paginationWrap && this.paginationWrap.querySelector(':disabled')) {
+				this.paginationWrap.querySelector(':disabled').disabled = false;
+			}
+			this.paginations[this.countVisible].disabled = true;
+		}
 	}
 
 	// движение слайдера с анимацией
@@ -184,6 +215,5 @@ class boltSlider {
 		})
 
 	}
-
 
 }

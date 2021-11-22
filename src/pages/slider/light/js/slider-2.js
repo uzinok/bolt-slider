@@ -3,6 +3,7 @@ const slider2 = new boltSlider({
 
 	gap: 20,
 	countVisible: 1,
+	speed: 1500,
 
 	paginationWrap: document.querySelector('.pagination-2'),
 	paginationTag: 'button',

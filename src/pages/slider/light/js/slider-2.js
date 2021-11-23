@@ -1,12 +1,10 @@
 const slider2 = new boltSlider({
 	slider: document.querySelector('.slider-2'),
 
-	gap: 20,
-	countVisible: 1,
-	speed: 1500,
+	gap: 40,
+	countVisible: 3,
+	speed: 500,
 
-	paginationWrap: document.querySelector('.pagination-2'),
-	paginationTag: 'button',
-	paginationClass: 'bolt-slider__pagination-btn',
-	paginationAria: 'Go to slide'
+	sliderPrew: document.querySelector('.prew-2'),
+	sliderNext: document.querySelector('.next-2'),
 });

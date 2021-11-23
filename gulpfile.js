@@ -92,7 +92,7 @@ const htmlTo = () => {
 exports.htmlTo = htmlTo;
 
 const scripts = () => {
-	return src('src/pages/**/js/*.js', {
+	return src('src/pages/slider/**/js/bolt-slider.js', {
 			base: 'src/pages'
 		})
 		.pipe(plumber({
@@ -130,7 +130,8 @@ const server = () => {
 
 	watch(['src/pages/css/style.less', 'src/pages/slider/**/css/bolt-slider.less'], lessToCss);
 	watch(["src/pages/index.pug", "src/pages/**/*.pug"], htmlTo);
-	watch('src/pages/**/js/*.js', scripts);
+	watch('src/pages/slider/**/js/bolt-slider.js', scripts);
+	watch('src/pages/**/js/*.js', htmlTo);
 }
 exports.server = server;
 

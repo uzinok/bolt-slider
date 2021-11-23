@@ -24,7 +24,7 @@ class boltSlider {
 		this.paginationWrap = options.paginationWrap || false;
 		this.paginationTag = options.paginationTag || 'span';
 		this.paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
-		this.paginationAria = options.paginationAria || 'of';
+		this.paginationAria = options.paginationAria || 'Go to slide';
 
 		// slider options
 		this.width = 0;
@@ -113,19 +113,19 @@ class boltSlider {
 		for (let i = 0; i < this.slideLength; i++) {
 			let btn = document.createElement(this.paginationTag);
 			btn.classList.add(this.paginationClass);
-			btn.dataset.count = i;
 
 			this.paginationWrap.append(btn);
 
 			if (this.paginationTag == 'button') {
+				btn.dataset.count = i;
 				btn.ariaLabel = this.paginationAria + ' ' + (i + 1);
 				btn.addEventListener('click', () => {
 					this.countVisible = i;
 					this.sliderAnimation();
 				});
 
-				this.paginations.push(btn);
 			}
+			this.paginations.push(btn);
 
 		}
 	}
@@ -134,6 +134,7 @@ class boltSlider {
 	sliderDraw() {
 		this.sliderList.style.transform = `translateX(-${(this.countVisible * this.width) + (this.gap * this.countVisible)}px)`;
 
+		// навигация
 		if (this.sliderPrew.disabled == true) {
 			this.sliderPrew.disabled = false;
 		}
@@ -148,12 +149,25 @@ class boltSlider {
 			this.sliderNext.disabled = true;
 		}
 
+		// пагинация
 		if (this.paginationTag == 'button') {
 			if (this.paginationWrap && this.paginationWrap.querySelector(':disabled')) {
 				this.paginationWrap.querySelector(':disabled').disabled = false;
 			}
 			this.paginations[this.countVisible].disabled = true;
 		}
+		if (this.paginationWrap) {
+			if (this.paginationWrap.querySelector('.' + this.paginationClass + '--active')) {
+				this.paginationWrap.querySelector('.' + this.paginationClass + '--active').classList.remove(this.paginationClass + '--active');
+			}
+			this.paginations[this.countVisible].classList.add(this.paginationClass + '--active');
+		}
+
+		// слайды
+		if (this.sliderList.querySelector('.bolt-slider__item--active')) {
+			this.sliderList.querySelector('.bolt-slider__item--active').classList.remove('bolt-slider__item--active');
+		}
+		this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible].classList.add('bolt-slider__item--active');
 	}
 
 	// движение слайдера с анимацией

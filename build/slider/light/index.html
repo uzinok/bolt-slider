@@ -1,5 +1,9 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Простой слайдер. BOLT-SLIDER набор плагинов для создания слайдеров на сайте.</title><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="./css/bolt-slider.css"><script src="./js/bolt-slider.js"></script></head><body><div class="container"><h1><a href="/">BOLT-SLIDER набор плагинов для создания слайдеров на сайте.</a></h1><nav><ul><li><p><a href="/slider/light/">Простой слайдер.</a>	слайдер с минимальным количеством опций.</p></li></ul></nav></div><div class="container"><h2>Примеры простого слайдера</h2></div><div class="container"><div class="bolt-slider slider-1 bolt-no-js"><button class="prew prew-1">Назад</button><button class="next next-1">Вперед</button><div class="bolt-slider__list-wrap"><div class="bolt-slider__list"><div class="bolt-slider__item"><p>Эй, цирюльникъ, ёжик выстриги, да щетину ряхи сбрей, феном вошь за печь гони!</p></div><div class="bolt-slider__item"><p>Экс-граф? Плюш изъят. Бьём чуждый цен хвощ!</p></div><div class="bolt-slider__item"><p>Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.</p></div><div class="bolt-slider__item"><p>— Любя, съешь щипцы, — вздохнёт мэр, — кайф жгуч</p></div><div class="bolt-slider__item"><p>В чащах юга жил-был цитрус... — да, но фальшивый экземпляръ!</p></div><div class="bolt-slider__item"><p>Южно-эфиопский грач увёл мышь за хобот на съезд ящериц.</p></div><div class="bolt-slider__item"><p>Аэрофотосъёмка ландшафта уже выявила земли богачей и процветающих крестьян.</p></div></div></div><div class="bolt-slider__pagination pagination-1"></div></div><pre><code>const slider1 = new boltSlider({
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Простой слайдер. BOLT-SLIDER набор плагинов для создания слайдеров на сайте.</title><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="./css/bolt-slider.css"><script src="./js/bolt-slider.js"></script></head><body><div class="container"><h1>BOLT-SLIDER набор плагинов для создания слайдеров на сайте.</h1><nav><ul><li><p><a href="/">Описание проекта</a></p></li><li><p><a href="/slider/light/">Простой слайдер.</a> Слайдер с минимальным количеством опций.</p></li></ul></nav></div><div class="container"><h2>Примеры простого слайдера</h2><p>Стили кнопок пагинации только для демонстрации.</p></div><div class="container"><div class="bolt-slider slider-1 bolt-no-js"><button class="prew prew-1">Назад</button><button class="next next-1">Вперед</button><div class="bolt-slider__list-wrap"><div class="bolt-slider__list"><div class="bolt-slider__item"><p>Эй, цирюльникъ, ёжик выстриги, да щетину ряхи сбрей, феном вошь за печь гони!</p></div><div class="bolt-slider__item"><p>Экс-граф? Плюш изъят. Бьём чуждый цен хвощ!</p></div><div class="bolt-slider__item"><p>Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.</p></div><div class="bolt-slider__item"><p>— Любя, съешь щипцы, — вздохнёт мэр, — кайф жгуч</p></div><div class="bolt-slider__item"><p>В чащах юга жил-был цитрус... — да, но фальшивый экземпляръ!</p></div><div class="bolt-slider__item"><p>Южно-эфиопский грач увёл мышь за хобот на съезд ящериц.</p></div><div class="bolt-slider__item"><p>Аэрофотосъёмка ландшафта уже выявила земли богачей и процветающих крестьян.</p></div></div></div><div class="bolt-slider__pagination pagination-1"></div></div><pre><code>const slider1 = new boltSlider({
 	slider: document.querySelector('.slider-1'),
+
+	roledescription: 'слайдер',
+	slideRoledescription: 'слайд',
+	slideAria: 'из',
 
 	sliderPrew: document.querySelector('.prew-1'),
 	sliderNext: document.querySelector('.next-1'),
@@ -11,6 +15,10 @@
 });
 </code></pre><script>const slider1 = new boltSlider({
 	slider: document.querySelector('.slider-1'),
+
+	roledescription: 'слайдер',
+	slideRoledescription: 'слайд',
+	slideAria: 'из',
 
 	sliderPrew: document.querySelector('.prew-1'),
 	sliderNext: document.querySelector('.next-1'),

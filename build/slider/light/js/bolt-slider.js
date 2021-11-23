@@ -24,6 +24,9 @@ var boltSlider = /*#__PURE__*/function () {
     ; // user options
 
     this.slider = options.slider;
+    this.slideAria = options.slideAria || 'of';
+    this.roledescription = options.roledescription || 'carousel';
+    this.slideRoledescription = options.slideRoledescription || 'slide';
     this.gap = options.gap || 0;
     this.countVisible = options.countVisible || 0;
     this.speed = options.speed || 300;
@@ -54,6 +57,15 @@ var boltSlider = /*#__PURE__*/function () {
       var _this = this;
 
       this.slider.classList.remove('bolt-no-js');
+      this.slider.setAttribute('aria-roledescription', this.roledescription);
+
+      for (var i = 0; i < this.slideLength; i++) {
+        this.slides[i].setAttribute('role', 'group');
+        this.slides[i].setAttribute('aria-roledescription', this.slideRoledescription);
+        this.slides[i].ariaLive = 'off';
+        this.slides[i].ariaLabel = "".concat(i + 1, " ").concat(this.slideAria, " ").concat(this.slideLength);
+      }
+
       this.setSliderSize();
       window.addEventListener('resize', function () {
         _this.setSliderSize(); // ставим слайдер на нужный слайд
@@ -184,10 +196,12 @@ var boltSlider = /*#__PURE__*/function () {
 
 
       if (this.sliderList.querySelector('.bolt-slider__item--active')) {
+        this.sliderList.querySelector('.bolt-slider__item--active').ariaLive = 'off';
         this.sliderList.querySelector('.bolt-slider__item--active').classList.remove('bolt-slider__item--active');
       }
 
       this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible].classList.add('bolt-slider__item--active');
+      this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible].ariaLive = 'polite';
     } // движение слайдера с анимацией
 
   }, {

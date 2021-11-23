@@ -1,6 +1,10 @@
 const slider1 = new boltSlider({
 	slider: document.querySelector('.slider-1'),
 
+	roledescription: 'слайдер',
+	slideRoledescription: 'слайд',
+	slideAria: 'из',
+
 	sliderPrew: document.querySelector('.prew-1'),
 	sliderNext: document.querySelector('.next-1'),
 

@@ -34,8 +34,9 @@ class boltSlider {
 		this.width = 0;
 		this.sliderList = this.slider.querySelector('.bolt-slider__list');
 		this.sliderListWrap = this.slider.querySelector('.bolt-slider__list-wrap');
-		this.slides = this.sliderList.querySelectorAll('.bolt-slider__item');
-		this.slideLength = this.slides.length;
+		this.sliderItem = this.sliderList.querySelectorAll('.bolt-slider__item');
+		this.slide = this.sliderList.querySelectorAll('.bolt-slider__content');
+		this.slideLength = this.sliderItem.length;
 		this.paginations = [];
 
 		// init slider
@@ -53,10 +54,10 @@ class boltSlider {
 		this.slider.setAttribute('aria-roledescription', this.roledescription);
 
 		for (let i = 0; i < this.slideLength; i++) {
-			this.slides[i].setAttribute('role', 'group');
-			this.slides[i].setAttribute('aria-roledescription', this.slideRoledescription);
-			this.slides[i].ariaLive = 'off';
-			this.slides[i].ariaLabel = `${i + 1} ${this.slideAria} ${this.slideLength}`;
+			this.sliderItem[i].setAttribute('role', 'group');
+			this.sliderItem[i].setAttribute('aria-roledescription', this.slideRoledescription);
+			this.sliderItem[i].ariaLive = 'off';
+			this.sliderItem[i].ariaLabel = `${i + 1} ${this.slideAria} ${this.slideLength}`;
 		}
 
 		this.setSliderSize();
@@ -78,11 +79,11 @@ class boltSlider {
 		this.width = this.slider.offsetWidth;
 		this.sliderList.style.width = (this.width * this.slideLength) + (this.gap * this.slideLength) + 'px';
 
-		this.slides.forEach(slide => {
-			slide.style.width = this.width + 'px';
+		this.sliderItem.forEach(item => {
+			item.style.width = this.width + 'px';
 
 			if (this.gap) {
-				slide.style.marginRight = this.gap + 'px';
+				item.style.marginRight = this.gap + 'px';
 			}
 		});
 	}
@@ -176,12 +177,13 @@ class boltSlider {
 		}
 
 		// слайды
-		if (this.sliderList.querySelector('.bolt-slider__item--active')) {
-			this.sliderList.querySelector('.bolt-slider__item--active').ariaLive = 'off';
-			this.sliderList.querySelector('.bolt-slider__item--active').classList.remove('bolt-slider__item--active');
+		if (this.sliderList.querySelector('.bolt-slider__content--active')) {
+			console.log(this.sliderList.querySelector('.bolt-slider__content--active').parentNode);
+			this.sliderList.querySelector('.bolt-slider__content--active').parentNode.ariaLive = 'off';
+			this.sliderList.querySelector('.bolt-slider__content--active').classList.remove('bolt-slider__content--active');
 		}
-		this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible].classList.add('bolt-slider__item--active');
 		this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible].ariaLive = 'polite';
+		this.sliderList.querySelectorAll('.bolt-slider__content')[this.countVisible].classList.add('bolt-slider__content--active');
 	}
 
 	// движение слайдера с анимацией

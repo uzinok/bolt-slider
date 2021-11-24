@@ -40,8 +40,9 @@ var boltSlider = /*#__PURE__*/function () {
     this.width = 0;
     this.sliderList = this.slider.querySelector('.bolt-slider__list');
     this.sliderListWrap = this.slider.querySelector('.bolt-slider__list-wrap');
-    this.slides = this.sliderList.querySelectorAll('.bolt-slider__item');
-    this.slideLength = this.slides.length;
+    this.sliderItem = this.sliderList.querySelectorAll('.bolt-slider__item');
+    this.slide = this.sliderList.querySelectorAll('.bolt-slider__content');
+    this.slideLength = this.sliderItem.length;
     this.paginations = []; // init slider
 
     this.sliderInit(); // касание
@@ -60,10 +61,10 @@ var boltSlider = /*#__PURE__*/function () {
       this.slider.setAttribute('aria-roledescription', this.roledescription);
 
       for (var i = 0; i < this.slideLength; i++) {
-        this.slides[i].setAttribute('role', 'group');
-        this.slides[i].setAttribute('aria-roledescription', this.slideRoledescription);
-        this.slides[i].ariaLive = 'off';
-        this.slides[i].ariaLabel = "".concat(i + 1, " ").concat(this.slideAria, " ").concat(this.slideLength);
+        this.sliderItem[i].setAttribute('role', 'group');
+        this.sliderItem[i].setAttribute('aria-roledescription', this.slideRoledescription);
+        this.sliderItem[i].ariaLive = 'off';
+        this.sliderItem[i].ariaLabel = "".concat(i + 1, " ").concat(this.slideAria, " ").concat(this.slideLength);
       }
 
       this.setSliderSize();
@@ -85,11 +86,11 @@ var boltSlider = /*#__PURE__*/function () {
 
       this.width = this.slider.offsetWidth;
       this.sliderList.style.width = this.width * this.slideLength + this.gap * this.slideLength + 'px';
-      this.slides.forEach(function (slide) {
-        slide.style.width = _this2.width + 'px';
+      this.sliderItem.forEach(function (item) {
+        item.style.width = _this2.width + 'px';
 
         if (_this2.gap) {
-          slide.style.marginRight = _this2.gap + 'px';
+          item.style.marginRight = _this2.gap + 'px';
         }
       });
     } // подготовка к движению слайдера
@@ -195,13 +196,14 @@ var boltSlider = /*#__PURE__*/function () {
       } // слайды
 
 
-      if (this.sliderList.querySelector('.bolt-slider__item--active')) {
-        this.sliderList.querySelector('.bolt-slider__item--active').ariaLive = 'off';
-        this.sliderList.querySelector('.bolt-slider__item--active').classList.remove('bolt-slider__item--active');
+      if (this.sliderList.querySelector('.bolt-slider__content--active')) {
+        console.log(this.sliderList.querySelector('.bolt-slider__content--active').parentNode);
+        this.sliderList.querySelector('.bolt-slider__content--active').parentNode.ariaLive = 'off';
+        this.sliderList.querySelector('.bolt-slider__content--active').classList.remove('bolt-slider__content--active');
       }
 
-      this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible].classList.add('bolt-slider__item--active');
       this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible].ariaLive = 'polite';
+      this.sliderList.querySelectorAll('.bolt-slider__content')[this.countVisible].classList.add('bolt-slider__content--active');
     } // движение слайдера с анимацией
 
   }, {

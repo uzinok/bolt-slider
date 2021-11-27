@@ -63,6 +63,7 @@ var boltSlider = /*#__PURE__*/function () {
 
       for (var i = 0; i < this.slideLength; i++) {
         this.sliderItem[i].ariaLive = 'off';
+        this.sliderItem[i].setAttribute('aria-roledescription', this.slideRoledescription);
       }
 
       this.setSliderSize();

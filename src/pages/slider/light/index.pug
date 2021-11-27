@@ -4,11 +4,11 @@ block variable
 	- var page = 'light'
 
 block main
-	.container
+	section.container
 		h2 Примеры простого слайдера
 		p Стили кнопок пагинации только для демонстрации.
 
-	.container
+	section.container
 		include ../../templates/slider-1
 		pre
 			code
@@ -17,7 +17,7 @@ block main
 		script
 			include ./js/slider-1.js
 
-	.container
+	section.container
 		include ../../templates/slider-2
 		pre
 			code
@@ -26,7 +26,7 @@ block main
 		script
 			include ./js/slider-2.js
 
-	.container
+	section.container
 		include ../../templates/slider-3
 		pre
 			code
@@ -34,3 +34,13 @@ block main
 
 		script
 			include ./js/slider-3.js
+
+	section.container
+		h2 Пользовательские опции
+		pre
+			code
+				include ./js/user-options.js
+		h2 Свойства и методы слайдера
+		pre
+			code
+				include ./js/slider-options.js

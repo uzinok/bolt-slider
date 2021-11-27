@@ -38,6 +38,7 @@ class boltSlider {
 		this.slide = this.sliderList.querySelectorAll('.bolt-slider__content');
 		this.slideLength = this.sliderItem.length;
 		this.paginations = [];
+		this.removeActive = false;
 
 		// init slider
 		this.sliderInit();
@@ -54,10 +55,7 @@ class boltSlider {
 		this.slider.setAttribute('aria-roledescription', this.roledescription);
 
 		for (let i = 0; i < this.slideLength; i++) {
-			this.sliderItem[i].setAttribute('role', 'group');
-			this.sliderItem[i].setAttribute('aria-roledescription', this.slideRoledescription);
 			this.sliderItem[i].ariaLive = 'off';
-			this.sliderItem[i].ariaLabel = `${i + 1} ${this.slideAria} ${this.slideLength}`;
 		}
 
 		this.setSliderSize();
@@ -131,7 +129,7 @@ class boltSlider {
 
 			if (this.paginationTag == 'button') {
 				btn.dataset.count = i;
-				btn.ariaLabel = this.paginationAria + ' ' + (i + 1);
+				btn.ariaLabel = this.paginationAria + ' ' + (i + 1) + '.';
 				btn.addEventListener('click', () => {
 					this.countVisible = i;
 					this.sliderAnimation();
@@ -177,13 +175,33 @@ class boltSlider {
 		}
 
 		// слайды
-		if (this.sliderList.querySelector('.bolt-slider__content--active')) {
-			console.log(this.sliderList.querySelector('.bolt-slider__content--active').parentNode);
-			this.sliderList.querySelector('.bolt-slider__content--active').parentNode.ariaLive = 'off';
-			this.sliderList.querySelector('.bolt-slider__content--active').classList.remove('bolt-slider__content--active');
+		if (this.sliderList.querySelector('.bolt-slider__item--active')) {
+			this.removeActive = this.sliderList.querySelector('.bolt-slider__item--active');
+
+			if (this.removeActive == this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible]) return;
+			this.removeActive.ariaLive = 'off';
 		}
-		this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible].ariaLive = 'polite';
-		this.sliderList.querySelectorAll('.bolt-slider__content')[this.countVisible].classList.add('bolt-slider__content--active');
+
+		this.sliderItem.forEach(slide => {
+			slide.classList.add('bolt-slider__item--active');
+		});
+
+		setTimeout(() => {
+			if (this.removeActive) {
+				this.removeActive.classList.remove('bolt-slider__item--active');
+			}
+
+			this.sliderItem.forEach(slide => {
+				slide.classList.remove('bolt-slider__item--active');
+			});
+
+			this.removeActive = false;
+			this.sliderItem[this.countVisible].classList.add('bolt-slider__item--active');
+		}, this.speed);
+
+		this.sliderItem[this.countVisible].ariaLive = 'polite';
+
+		this.sliderList.style.height = this.sliderItem[this.countVisible].querySelector('.bolt-slider__content').offsetHeight + 'px';
 	}
 
 	// движение слайдера с анимацией
@@ -204,6 +222,9 @@ class boltSlider {
 		})
 
 		this.sliderList.addEventListener("touchmove", (e) => {
+			this.sliderItem.forEach(slide => {
+				slide.classList.add('bolt-slider__item--active');
+			});
 			this.touchMove = this.startClientX - e.touches[0].clientX;
 			if (
 				((this.countVisible * this.width) + (this.gap * this.countVisible) + this.touchMove) >=

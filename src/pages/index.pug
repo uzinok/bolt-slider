@@ -14,10 +14,10 @@ block main
 
 		pre
 			code
-				span.color-yellow ⚠
+				span.color-yellow ⚠️
 				| &nbsp;Not slider options
 				|
-				span.color-yellow ⚠
+				span.color-yellow ⚠️
 				| &nbsp;Not slider
 
 	.container
@@ -37,6 +37,8 @@ block main
 				p #[code .bolt-slider__item] - элемент списка слайдов, следит за появлением самих слайдов для скрин-ридера, данный класс необходим для правильной работы слайдера
 			li
 				p #[code .bolt-slider__content] - сам слайд, когда родитель не активный #[small (не содержит класс #[code .bolt-slider__item--active])], содержимое скрыто #[small (#[code display: none])], данный класс необходим для правильной работы слайдера
+			li
+				p #[code .bolt-slider__pagination] блок для пагинации, класс может быть любой, сам блок может находиться в любом месте разметки
 
 	.container
 		h2 Доступность.

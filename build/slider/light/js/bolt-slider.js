@@ -64,6 +64,7 @@ var boltSlider = /*#__PURE__*/function () {
       for (var i = 0; i < this.slideLength; i++) {
         this.sliderItem[i].ariaLive = 'off';
         this.sliderItem[i].setAttribute('aria-roledescription', this.slideRoledescription);
+        this.sliderItem[i].setAttribute('tabindex', -1);
       }
 
       this.setSliderSize();
@@ -77,6 +78,7 @@ var boltSlider = /*#__PURE__*/function () {
       this.sliderToggle(); // ставим слайдер на нужный слайд
 
       this.sliderDraw();
+      this.keyupDraw();
     }
   }, {
     key: "setSliderSize",
@@ -85,6 +87,7 @@ var boltSlider = /*#__PURE__*/function () {
 
       this.width = this.slider.offsetWidth;
       this.sliderList.style.width = this.width * this.slideLength + this.gap * this.slideLength + 'px';
+      this.sliderList.style.height = this.sliderItem[this.countVisible].querySelector('.bolt-slider__content').offsetHeight + 'px';
       this.sliderItem.forEach(function (item) {
         item.style.width = _this2.width + 'px';
 
@@ -201,6 +204,7 @@ var boltSlider = /*#__PURE__*/function () {
         this.removeActive = this.sliderList.querySelector('.bolt-slider__item--active');
         if (this.removeActive == this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible]) return;
         this.removeActive.ariaLive = 'off';
+        this.removeActive.setAttribute('tabindex', -1);
       }
 
       this.sliderItem.forEach(function (slide) {
@@ -220,68 +224,113 @@ var boltSlider = /*#__PURE__*/function () {
         _this5.sliderItem[_this5.countVisible].classList.add('bolt-slider__item--active');
       }, this.speed);
       this.sliderItem[this.countVisible].ariaLive = 'polite';
+      this.sliderItem[this.countVisible].setAttribute('tabindex', 0);
       this.sliderList.style.height = this.sliderItem[this.countVisible].querySelector('.bolt-slider__content').offsetHeight + 'px';
+    } // клавиатура
+
+  }, {
+    key: "keyupDraw",
+    value: function keyupDraw() {
+      var _this6 = this;
+
+      this.sliderList.addEventListener('keyup', function (e) {
+        if (e.key == 'ArrowLeft') {
+          e.preventDefault();
+          _this6.countVisible--;
+
+          if (_this6.countVisible < 0) {
+            _this6.sliderPrew.disabled = true;
+            return _this6.countVisible = 0;
+          }
+
+          _this6.sliderAnimation();
+
+          setTimeout(function () {
+            _this6.sliderItem[_this6.countVisible].focus();
+          }, _this6.speed);
+        }
+
+        if (e.key == 'ArrowRight') {
+          _this6.countVisible++;
+
+          if (_this6.countVisible > _this6.slideLength - 1) {
+            _this6.sliderNext.disabled = true;
+            _this6.countVisible = _this6.slideLength - 1;
+            return;
+          }
+
+          _this6.sliderAnimation();
+
+          setTimeout(function () {
+            _this6.sliderItem[_this6.countVisible].focus();
+          }, _this6.speed);
+        }
+
+        console.log(_this6.countVisible);
+      }, {
+        passive: false
+      });
     } // движение слайдера с анимацией
 
   }, {
     key: "sliderAnimation",
     value: function sliderAnimation() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.sliderList.style.transition = "transform ".concat(this.speed, "ms ease-in-out, height ").concat(this.speed, "ms ease-in-out");
       this.sliderDraw();
       setTimeout(function () {
-        _this6.sliderList.style.transition = "transform 0ms ease-in-out, height 0ms ease-in-out";
+        _this7.sliderList.style.transition = "transform 0ms ease-in-out, height 0ms ease-in-out";
       }, this.speed);
     } // касание
 
   }, {
     key: "touthMove",
     value: function touthMove() {
-      var _this7 = this;
+      var _this8 = this;
 
       this.sliderList.addEventListener("touchstart", function (e) {
-        _this7.startClientX = e.touches[0].clientX;
+        _this8.startClientX = e.touches[0].clientX;
       });
       this.sliderList.addEventListener("touchmove", function (e) {
-        _this7.sliderItem.forEach(function (slide) {
+        _this8.sliderItem.forEach(function (slide) {
           slide.classList.add('bolt-slider__item--active');
         });
 
-        _this7.touchMove = _this7.startClientX - e.touches[0].clientX;
+        _this8.touchMove = _this8.startClientX - e.touches[0].clientX;
 
-        if (_this7.countVisible * _this7.width + _this7.gap * _this7.countVisible + _this7.touchMove >= 0) {
-          if (_this7.countVisible * _this7.width + _this7.gap * _this7.countVisible + _this7.touchMove <= _this7.width * (_this7.slideLength - 1) + _this7.gap * (_this7.slideLength - 1)) {
-            _this7.sliderList.style.transform = "translateX(-".concat(_this7.countVisible * _this7.width + _this7.gap * _this7.countVisible + _this7.touchMove, "px)");
+        if (_this8.countVisible * _this8.width + _this8.gap * _this8.countVisible + _this8.touchMove >= 0) {
+          if (_this8.countVisible * _this8.width + _this8.gap * _this8.countVisible + _this8.touchMove <= _this8.width * (_this8.slideLength - 1) + _this8.gap * (_this8.slideLength - 1)) {
+            _this8.sliderList.style.transform = "translateX(-".concat(_this8.countVisible * _this8.width + _this8.gap * _this8.countVisible + _this8.touchMove, "px)");
           }
         }
       });
       this.sliderList.addEventListener("touchend", function (e) {
-        if (_this7.touchMove < 30 && _this7.touchMove > -30) {
-          return _this7.sliderAnimation();
+        if (_this8.touchMove < 30 && _this8.touchMove > -30) {
+          return _this8.sliderAnimation();
         }
 
-        if (_this7.touchMove > 0) {
-          _this7.countVisible++;
+        if (_this8.touchMove > 0) {
+          _this8.countVisible++;
 
-          if (_this7.countVisible >= _this7.slideLength - 1) {
-            _this7.countVisible = _this7.slideLength - 1;
+          if (_this8.countVisible >= _this8.slideLength - 1) {
+            _this8.countVisible = _this8.slideLength - 1;
           }
 
-          _this7.sliderAnimation();
+          _this8.sliderAnimation();
         }
 
-        if (_this7.touchMove < 0) {
-          _this7.countVisible--;
+        if (_this8.touchMove < 0) {
+          _this8.countVisible--;
 
-          if (_this7.countVisible < 0) {
-            _this7.countVisible = 0;
+          if (_this8.countVisible < 0) {
+            _this8.countVisible = 0;
           }
 
-          _this7.sliderAnimation();
+          _this8.sliderAnimation();
         }
 
-        _this7.touchMove = 0;
+        _this8.touchMove = 0;
       });
     }
   }]);

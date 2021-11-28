@@ -5,22 +5,25 @@ block variable
 	- var page = 'index'
 
 block main
-	.container
+	section.container
 		h2 Описание.
 
-		p Стили только необходимые для работы слайдера. В библиотеке нет стилей для кнопок навигации и пагинации. Элементы управления могут располагаться в любом месте html кода. Кнопки навигации передаются элементами. Для создания кнопок пагинации передается блок в котором они будут генерироваться.
+		ul
+			li Стили только необходимые для работы слайдера. В библиотеке нет стилей для кнопок навигации и пагинации. Элементы управления могут располагаться в любом месте html кода. Кнопки навигации передаются элементами. Для создания кнопок пагинации передается блок в котором они будут генерироваться.
 
-		p Если не переданы или с ошибкой переданы опции в консоль выводинтся ошибка:
+			li Если не переданы или с ошибкой переданы опции в консоль выводинтся ошибка:
+				pre
+					code
+						span.color-yellow ⚠️
+						| &nbsp;Not slider options
+						|
+						span.color-yellow ⚠️
+						| &nbsp;Not slider
 
-		pre
-			code
-				span.color-yellow ⚠️
-				| &nbsp;Not slider options
-				|
-				span.color-yellow ⚠️
-				| &nbsp;Not slider
+			li Управление слайдером кнопками навигации и пагинации, когда слайд(ы) в фокусе - стрелками клавиатуры "&#8592;", "&#8594;", на сенсорных устройствах касанием.
+			li Из-за доступности изначально есть адаптивная высота.
 
-	.container
+	section.container
 		h2 Верстка.
 		img.center-img(src="./img/html.png", alt="пример верстки слайдера")
 
@@ -40,7 +43,7 @@ block main
 			li
 				p #[code .bolt-slider__pagination] блок для пагинации, класс может быть любой, сам блок может находиться в любом месте разметки
 
-	.container
+	section.container
 		h2 Доступность.
 
 		ol
@@ -48,3 +51,8 @@ block main
 				p для слайдера необходимо добавить атрибут #[code 'aria-label']. #[br] Этот атрибут не должен содержать слово слайдер или карусель. так как скрин-ридер озвучит #[code 'aria-roledescription'], значение которого можно изменить опционально. По умолчанию #[code 'carousel'].
 			li
 				p слайдам необходимо добавлять атрибут #[code 'aria-label']. #[br] Так же в #[code 'aria-label'] не нужно прописывать слово слайд так как скрин-ридер озвучит #[code 'aria-roledescription'], значение которого можно изменить опционально. По умолчанию #[code 'slide'].
+			li
+				p Без js слайдер имеет похожий вид, но без кнопок управления
+
+		style .bolt-no-js .bolt-slider__list-wrap{overflow:initial}.bolt-no-js .bolt-slider__list{overflow-x:auto;overflow-y:hidden;-ms-scroll-snap-type:x mandatory;scroll-snap-type:x mandatory}.bolt-no-js .bolt-slider__item{-ms-flex-negative:0;flex-shrink:0;scroll-snap-align:center}.bolt-no-js .bolt-slider__pagination,.bolt-no-js .next,.bolt-no-js .prew{display:none}.bolt-no-js .bolt-slider__content,.bolt-slider__item--active .bolt-slider__content{display:block}.bolt-slider__list-wrap{overflow:hidden}.bolt-slider__list{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start;margin:0;padding:0;list-style-type:none}.bolt-slider__item{-ms-flex-preferred-size:100%;flex-basis:100%}.bolt-slider__content{display:none}
+		include templates/slider-3

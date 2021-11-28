@@ -14,7 +14,6 @@ this.sliderInit();
 // касание
 this.startClientX = 0;
 this.touchMove = 0;
-
 this.touthMove();
 
 setSliderSize();
@@ -28,3 +27,5 @@ sliderDraw();
 sliderAnimation();
 // касание
 touthMove();
+// клавиатура
+keyupDraw()

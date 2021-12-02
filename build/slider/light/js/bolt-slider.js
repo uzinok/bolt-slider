@@ -30,8 +30,22 @@ var boltSlider = /*#__PURE__*/function () {
     this.gap = options.gap || 0;
     this.countVisible = options.countVisible || 0;
     this.speed = options.speed || 300;
+
+    if (options.sliderPrew == null) {
+      console.warn('Not options sliderPrew');
+    }
+
+    if (options.sliderNext == null) {
+      console.warn('Not options sliderNext');
+    }
+
     this.sliderPrew = options.sliderPrew || false;
     this.sliderNext = options.sliderNext || false;
+
+    if (options.paginationWrap === null) {
+      console.warn('Not options paginationWrap');
+    }
+
     this.paginationWrap = options.paginationWrap || false;
     this.paginationTag = options.paginationTag || 'span';
     this.paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
@@ -44,7 +58,12 @@ var boltSlider = /*#__PURE__*/function () {
     this.slide = this.sliderList.querySelectorAll('.bolt-slider__content');
     this.slideLength = this.sliderItem.length;
     this.paginations = [];
-    this.removeActive = false; // init slider
+    this.removeActive = false;
+
+    if (this.countVisible > this.slideLength) {
+      this.countVisible = 0;
+    } // init slider
+
 
     this.sliderInit(); // касание
 
@@ -181,15 +200,15 @@ var boltSlider = /*#__PURE__*/function () {
       } // пагинация
 
 
-      if (this.paginationTag == 'button') {
-        if (this.paginationWrap && this.paginationWrap.querySelector(':disabled')) {
-          this.paginationWrap.querySelector(':disabled').disabled = false;
+      if (this.paginationWrap) {
+        if (this.paginationTag == 'button') {
+          if (this.paginationWrap && this.paginationWrap.querySelector(':disabled')) {
+            this.paginationWrap.querySelector(':disabled').disabled = false;
+          }
+
+          this.paginations[this.countVisible].disabled = true;
         }
 
-        this.paginations[this.countVisible].disabled = true;
-      }
-
-      if (this.paginationWrap) {
         if (this.paginationWrap.querySelector('.' + this.paginationClass + '--active')) {
           this.paginationWrap.querySelector('.' + this.paginationClass + '--active').classList.remove(this.paginationClass + '--active');
         }

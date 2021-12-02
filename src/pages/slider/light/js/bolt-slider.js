@@ -22,9 +22,18 @@ class boltSlider {
 		this.countVisible = options.countVisible || 0;
 		this.speed = options.speed || 300;
 
+		if (options.sliderPrew == null) {
+			console.warn('Not options sliderPrew');
+		}
+		if (options.sliderNext == null) {
+			console.warn('Not options sliderNext');
+		}
 		this.sliderPrew = options.sliderPrew || false;
 		this.sliderNext = options.sliderNext || false;
 
+		if (options.paginationWrap === null) {
+			console.warn('Not options paginationWrap');
+		}
 		this.paginationWrap = options.paginationWrap || false;
 		this.paginationTag = options.paginationTag || 'span';
 		this.paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
@@ -39,6 +48,10 @@ class boltSlider {
 		this.slideLength = this.sliderItem.length;
 		this.paginations = [];
 		this.removeActive = false;
+
+		if (this.countVisible > this.slideLength) {
+			this.countVisible = 0;
+		}
 
 		// init slider
 		this.sliderInit();
@@ -163,13 +176,13 @@ class boltSlider {
 		}
 
 		// пагинация
-		if (this.paginationTag == 'button') {
-			if (this.paginationWrap && this.paginationWrap.querySelector(':disabled')) {
-				this.paginationWrap.querySelector(':disabled').disabled = false;
-			}
-			this.paginations[this.countVisible].disabled = true;
-		}
 		if (this.paginationWrap) {
+			if (this.paginationTag == 'button') {
+				if (this.paginationWrap && this.paginationWrap.querySelector(':disabled')) {
+					this.paginationWrap.querySelector(':disabled').disabled = false;
+				}
+				this.paginations[this.countVisible].disabled = true;
+			}
 			if (this.paginationWrap.querySelector('.' + this.paginationClass + '--active')) {
 				this.paginationWrap.querySelector('.' + this.paginationClass + '--active').classList.remove(this.paginationClass + '--active');
 			}

@@ -57,7 +57,6 @@ class boltSlider {
 		for (let i = 0; i < this.slideLength; i++) {
 			this.sliderItem[i].ariaLive = 'off';
 			this.sliderItem[i].setAttribute('aria-roledescription', this.slideRoledescription);
-			this.sliderItem[i].setAttribute('tabindex', -1);
 		}
 
 		this.setSliderSize();
@@ -73,7 +72,6 @@ class boltSlider {
 
 		// ставим слайдер на нужный слайд
 		this.sliderDraw();
-		this.keyupDraw();
 	}
 
 	setSliderSize() {
@@ -184,7 +182,6 @@ class boltSlider {
 
 			if (this.removeActive == this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible]) return;
 			this.removeActive.ariaLive = 'off';
-			this.removeActive.setAttribute('tabindex', -1);
 		}
 
 		this.sliderItem.forEach(slide => {
@@ -205,48 +202,9 @@ class boltSlider {
 		}, this.speed);
 
 		this.sliderItem[this.countVisible].ariaLive = 'polite';
-		this.sliderItem[this.countVisible].setAttribute('tabindex', 0);
 
 		this.sliderList.style.height = this.sliderItem[this.countVisible].querySelector('.bolt-slider__content').offsetHeight + 'px';
 
-	}
-
-	// клавиатура
-	keyupDraw() {
-		this.sliderList.addEventListener('keyup', (e) => {
-			if (e.key == 'ArrowLeft') {
-				e.preventDefault();
-				this.countVisible--;
-
-				if (this.countVisible < 0) {
-					this.sliderPrew.disabled = true;
-					return this.countVisible = 0;
-				}
-
-				this.sliderAnimation();
-				setTimeout(() => {
-					this.sliderItem[this.countVisible].focus();
-				}, this.speed)
-			}
-
-			if (e.key == 'ArrowRight') {
-				this.countVisible++;
-
-				if (this.countVisible > this.slideLength - 1) {
-					this.sliderNext.disabled = true;
-					this.countVisible = this.slideLength - 1;
-					return;
-				}
-
-				this.sliderAnimation();
-				setTimeout(() => {
-					this.sliderItem[this.countVisible].focus();
-				}, this.speed)
-			}
-			console.log(this.countVisible);
-		}, {
-			passive: false
-		});
 	}
 
 	// движение слайдера с анимацией

@@ -2,6 +2,8 @@
 <a href="https://github.com/uzinok/bolt-slider/blob/master/src/pages/slider/light/css/bolt-slider.less" target="_blank">less-код</a></p></section><section class="container"><div class="bolt-slider slider-1 bolt-no-js"><button class="prew prew-1">Назад</button><button class="next next-1">Вперед</button><div class="bolt-slider__list-wrap"><div class="bolt-slider__list"><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Эй, <a href="#">цирюльникъ</a>, ёжик выстриги, да щетину ряхи сбрей, феном вошь за печь гони!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><img src="/img/1.jpg" alt="картинка 1"></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><a href="#"><img src="/img/2.jpg" alt="картинка 2"></a></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Экс-граф? Плюш изъят. Бьём чуждый цен хвощ!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>— Любя, съешь щипцы, — вздохнёт мэр, — кайф жгуч</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>В чащах юга жил-был цитрус... — да, но фальшивый экземпляръ!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Южно-эфиопский грач увёл мышь за хобот на съезд ящериц.</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Аэрофотосъёмка ландшафта уже выявила земли богачей и процветающих крестьян.</p></div></div></div></div><div class="bolt-slider__pagination pagination-1"></div></div><pre><code>const slider1 = new boltSlider({
 	slider: '.slider-1',
 
+	autoPlay: true,
+
 	roledescription: 'слайдер',
 	slideRoledescription: 'слайд',
 	slideAria: 'из',
@@ -16,6 +18,8 @@
 });
 </code></pre><script>const slider1 = new boltSlider({
 	slider: '.slider-1',
+
+	autoPlay: true,
 
 	roledescription: 'слайдер',
 	slideRoledescription: 'слайд',
@@ -74,52 +78,5 @@
 	paginationClass: 'bolt-slider__pagination-btn',
 });
 </script></section><section class="container"><h2>Пользовательские опции</h2><pre><code>// user options
-this.slider = options.slider;
-
-this.slideAria = options.slideAria || 'of';
-this.roledescription = options.roledescription || 'carousel';
-this.slideRoledescription = options.slideRoledescription || 'slide';
-
-this.gap = options.gap || 0;
-this.currentSlide = options.currentSlide || 0;
-this.speed = options.speed || 300;
-
-this.sliderPrew = options.sliderPrew || false;
-this.sliderNext = options.sliderNext || false;
-
-this.paginationWrap = options.paginationWrap || false;
-this.paginationTag = options.paginationTag || 'span';
-this.paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
-this.paginationAria = options.paginationAria || 'Go to slide';
 </code></pre><h2>Свойства и методы слайдера</h2><pre><code>// slider options
-this.width = 0;
-this.sliderList = this.slider.querySelector('.bolt-slider__list');
-this.sliderListWrap = this.slider.querySelector('.bolt-slider__list-wrap');
-this.sliderItem = this.sliderList.querySelectorAll('.bolt-slider__item');
-this.slide = this.sliderList.querySelectorAll('.bolt-slider__content');
-this.slideLength = this.sliderItem.length;
-this.paginations = [];
-this.removeActive = false;
-
-// init slider
-this.sliderInit();
-
-// касание
-this.startClientX = 0;
-this.touchMove = 0;
-this.touthMove();
-
-setSliderSize();
-
-// подготовка к движению слайдера
-sliderToggle();
-setPagination();
-// Движение слайдера
-moveSlider();
-// движение слайдера с анимацией
-sliderAnimation();
-// касание
-touthMove();
-// клавиатура
-keyupDraw()
 </code></pre></section><footer><p><a href="https://github.com/uzinok/bolt-slider">github.com</a></p></footer></body></html>

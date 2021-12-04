@@ -9,11 +9,9 @@ class boltSlider {
 		if (!options) {
 			return console.warn('Not slider options');
 		}
-
 		if (!document.querySelector(options.slider)) {
 			return console.warn('Not slider');
 		}
-
 		if (options.sliderPrew && !document.querySelector(options.sliderPrew)) {
 			console.warn('Not options sliderPrew');
 			options.sliderPrew = false;
@@ -22,7 +20,6 @@ class boltSlider {
 			console.warn('Not options sliderNext');
 			options.sliderNext = false;
 		}
-
 		if (options.paginationWrap && !document.querySelector(options.paginationWrap)) {
 			console.warn('Not options paginationWrap');
 			options.paginationWrap = false;
@@ -61,6 +58,7 @@ class boltSlider {
 		if (!_.slider.querySelector('.bolt-slider__content')) {
 			return console.warn('Not slider contents');
 		}
+
 		// slider options
 		_.width = 0;
 		_.sliderListWrap = _.slider.querySelector('.bolt-slider__list-wrap');
@@ -254,7 +252,7 @@ class boltSlider {
 	sliderAnimation() {
 		let _ = this;
 
-		_.sliderList.style.transition = `transform ${_.speed}ms ease-in-out, height ${_.speed}ms ease-in-out`;
+		_.setAnimation();
 
 		_.sliderItems.forEach(item => {
 			item.classList.add('bolt-slider__item--active');
@@ -264,9 +262,22 @@ class boltSlider {
 			_.sliderItems.forEach(item => {
 				item.classList.remove('bolt-slider__item--active');
 			});
-			_.sliderList.style.transition = `transform 0ms ease-in-out, height 0ms ease-in-out`;
+			_.removeAnimation();
 			_.updateSlide();
 		}, _.speed)
 	}
+
+	setAnimation() {
+		let _ = this;
+
+		_.sliderList.style.transitionDuration = `${_.speed}ms, ${_.speed}ms`;
+	}
+
+	removeAnimation() {
+		let _ = this;
+
+		_.sliderList.style.transitionDuration = `0ms, 0ms`;
+	}
+
 
 }

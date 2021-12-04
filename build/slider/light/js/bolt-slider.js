@@ -294,7 +294,7 @@ var boltSlider = /*#__PURE__*/function () {
     value: function sliderAnimation() {
       var _ = this;
 
-      _.sliderList.style.transition = "transform ".concat(_.speed, "ms ease-in-out, height ").concat(_.speed, "ms ease-in-out");
+      _.setAnimation();
 
       _.sliderItems.forEach(function (item) {
         item.classList.add('bolt-slider__item--active');
@@ -305,10 +305,24 @@ var boltSlider = /*#__PURE__*/function () {
           item.classList.remove('bolt-slider__item--active');
         });
 
-        _.sliderList.style.transition = "transform 0ms ease-in-out, height 0ms ease-in-out";
+        _.removeAnimation();
 
         _.updateSlide();
       }, _.speed);
+    }
+  }, {
+    key: "setAnimation",
+    value: function setAnimation() {
+      var _ = this;
+
+      _.sliderList.style.transitionDuration = "".concat(_.speed, "ms, ").concat(_.speed, "ms");
+    }
+  }, {
+    key: "removeAnimation",
+    value: function removeAnimation() {
+      var _ = this;
+
+      _.sliderList.style.transitionDuration = "0ms, 0ms";
     }
   }]);
 

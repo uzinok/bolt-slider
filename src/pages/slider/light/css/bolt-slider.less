@@ -29,10 +29,12 @@
 
 .bolt-slider__list {
 	display: flex;
-	align-items: flex-start;
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
+
+	transition-property: transform, height;
+	transition-timing-function: ease-in-out;
 }
 
 .bolt-slider__item {
@@ -46,7 +48,3 @@
 .bolt-slider__item--active .bolt-slider__content {
 	display: block;
 }
-
-// [tabindex=0] {
-// 	background-color: red;
-// }

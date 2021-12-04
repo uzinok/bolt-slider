@@ -91,15 +91,12 @@ class boltSlider {
 			_.sliderItems[i].setAttribute('aria-roledescription', _.slideRoledescription);
 		}
 
-		// следим за шириной слайдера
 		_.setSliderSize();
 		window.addEventListener('resize', () => {
 			_.setSliderSize();
-			// сдвигаем на нужный слайд
 			_.moveSlider();
 		});
 
-		// при необходимости создаем кнопки пагинации
 		if (_.paginationWrap) {
 			_.setPagination();
 		}
@@ -111,9 +108,7 @@ class boltSlider {
 			_.movePrew();
 		}
 
-		// показываем нужный слайд
 		_.updateSlide();
-		// сдвигаем на нужный слайд
 		_.moveSlider();
 	}
 
@@ -143,12 +138,11 @@ class boltSlider {
 			_.paginationWrap.append(btn);
 
 			if (_.paginationTag == 'button') {
-				btn.dataset.count = i;
 				btn.ariaLabel = _.paginationAria + ' ' + (i + 1) + '.';
 				btn.addEventListener('click', () => {
 					_.currentSlide = i;
 
-					_.updateSlide();
+					_.sliderAnimation();
 					_.moveSlider();
 				});
 
@@ -167,8 +161,7 @@ class boltSlider {
 			if (_.currentSlide >= _.slideLength) {
 				return _.currentSlide = _.slideLength - 1;
 			}
-
-			_.updateSlide();
+			_.sliderAnimation();
 			_.moveSlider();
 		})
 	}
@@ -183,7 +176,7 @@ class boltSlider {
 				return _.currentSlide = 0;
 			}
 
-			_.updateSlide();
+			_.sliderAnimation();
 			_.moveSlider();
 		})
 	}
@@ -230,8 +223,8 @@ class boltSlider {
 		if (_.paginationWrap.querySelector('.bolt-slider__pagination-btn--active')) {
 			if (_.paginationTag == 'button') {
 				_.paginationWrap.querySelector('.bolt-slider__pagination-btn--active').disabled = false;
-				_.paginationWrap.querySelector('.bolt-slider__pagination-btn--active').classList.remove(_.paginationClass + '--active');
 			}
+			_.paginationWrap.querySelector('.bolt-slider__pagination-btn--active').classList.remove(_.paginationClass + '--active');
 		}
 
 		_.paginations[_.currentSlide].disabled = true;
@@ -256,6 +249,24 @@ class boltSlider {
 		if (_.currentSlide <= 0) {
 			_.sliderPrew.disabled = true;
 		}
+	}
+
+	sliderAnimation() {
+		let _ = this;
+
+		_.sliderList.style.transition = `transform ${_.speed}ms ease-in-out, height ${_.speed}ms ease-in-out`;
+
+		_.sliderItems.forEach(item => {
+			item.classList.add('bolt-slider__item--active');
+		});
+
+		setTimeout(() => {
+			_.sliderItems.forEach(item => {
+				item.classList.remove('bolt-slider__item--active');
+			});
+			_.sliderList.style.transition = `transform 0ms ease-in-out, height 0ms ease-in-out`;
+			_.updateSlide();
+		}, _.speed)
 	}
 
 }

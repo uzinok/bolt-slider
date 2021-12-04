@@ -3,284 +3,124 @@
 class boltSlider {
 
 	constructor(options) {
+		let _ = this;
+
+		// errors user options
 		if (!options) {
 			return console.warn('Not slider options');
 		};
 
-		if (!options.slider) {
+		if (!document.querySelector(options.slider)) {
 			return console.warn('Not slider');
 		};
 
-		// user options
-		this.slider = options.slider;
-
-		this.slideAria = options.slideAria || 'of';
-		this.roledescription = options.roledescription || 'carousel';
-		this.slideRoledescription = options.slideRoledescription || 'slide';
-
-		this.gap = options.gap || 0;
-		this.countVisible = options.countVisible || 0;
-		this.speed = options.speed || 300;
-
-		if (options.sliderPrew == null) {
+		if (options.sliderPrew && !document.querySelector(options.sliderPrew)) {
 			console.warn('Not options sliderPrew');
+			options.sliderPrew = false;
 		}
-		if (options.sliderNext == null) {
+		if (options.sliderNext && !document.querySelector(options.sliderNext)) {
 			console.warn('Not options sliderNext');
+			options.sliderNext = false;
 		}
-		this.sliderPrew = options.sliderPrew || false;
-		this.sliderNext = options.sliderNext || false;
 
-		if (options.paginationWrap === null) {
+		if (options.paginationWrap && !document.querySelector(options.paginationWrap)) {
 			console.warn('Not options paginationWrap');
+			options.paginationWrap = false;
 		}
-		this.paginationWrap = options.paginationWrap || false;
-		this.paginationTag = options.paginationTag || 'span';
-		this.paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
-		this.paginationAria = options.paginationAria || 'Go to slide';
 
+		// user options
+		_.slider = document.querySelector(options.slider);
+
+		_.slideAria 					 = options.slideAria || 'of';
+		_.roledescription			 = options.roledescription || 'carousel';
+		_.slideRoledescription = options.slideRoledescription || 'slide';
+
+		_.gap 					= options.gap || 0;
+		_.currentSlide 	= options.currentSlide || 0;
+		_.speed 				= options.speed || 300;
+
+		_.sliderPrew = options.sliderPrew || false;
+		_.sliderNext = options.sliderNext || false;
+
+		_.paginationWrap 	= options.paginationWrap || false;
+		_.paginationTag 	= options.paginationTag || 'span';
+		_.paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
+		_.paginationAria 	= options.paginationAria || 'Go to slide';
+
+		// errors slider options
+		if (!_.slider.querySelector('.bolt-slider__list-wrap')) {
+			return console.warn('Not slider wrap list');
+		}
+		if (!_.slider.querySelector('.bolt-slider__list')) {
+			return console.warn('Not slider list');
+		}
+		if (!_.slider.querySelector('.bolt-slider__item')) {
+			return console.warn('Not slider items');
+		}
+		if (!_.slider.querySelector('.bolt-slider__content')) {
+			return console.warn('Not slider contents');
+		}
 		// slider options
-		this.width = 0;
-		this.sliderList = this.slider.querySelector('.bolt-slider__list');
-		this.sliderListWrap = this.slider.querySelector('.bolt-slider__list-wrap');
-		this.sliderItem = this.sliderList.querySelectorAll('.bolt-slider__item');
-		this.slide = this.sliderList.querySelectorAll('.bolt-slider__content');
-		this.slideLength = this.sliderItem.length;
-		this.paginations = [];
-		this.removeActive = false;
+		_.width = 0;
+		_.sliderListWrap 	= _.slider.querySelector('.bolt-slider__list-wrap');
+		_.sliderList 			= _.slider.querySelector('.bolt-slider__list');
+		_.sliderItem 			= _.sliderList.querySelectorAll('.bolt-slider__item');
+		_.slide 					= _.sliderList.querySelectorAll('.bolt-slider__content');
+		_.slideLength 		= _.sliderItem.length;
+		_.paginations 		= [];
+		_.removeActive 		= false;
 
-		if (this.countVisible > this.slideLength) {
-			this.countVisible = 0;
+		if (_.currentSlide > _.slideLength) {
+			_.currentSlide = 0;
 		}
 
 		// init slider
-		this.sliderInit();
-
-		// касание
-		this.startClientX = 0;
-		this.touchMove = 0;
-
-		this.touthMove();
+		_.sliderInit();
 	}
 
 	sliderInit() {
-		this.slider.classList.remove('bolt-no-js');
-		this.slider.setAttribute('aria-roledescription', this.roledescription);
+		let _ = this;
+		_.slider.classList.remove('bolt-no-js');
+		_.slider.setAttribute('aria-roledescription', _.roledescription);
 
-		for (let i = 0; i < this.slideLength; i++) {
-			this.sliderItem[i].ariaLive = 'off';
-			this.sliderItem[i].setAttribute('aria-roledescription', this.slideRoledescription);
+		for (let i = 0; i < _.slideLength; i++) {
+			_.sliderItem[i].ariaLive = 'off';
+			_.sliderItem[i].setAttribute('aria-roledescription', _.slideRoledescription);
 		}
 
-		this.setSliderSize();
+		_.setSliderSize();
 		window.addEventListener('resize', () => {
-			this.setSliderSize();
+			_.setSliderSize();
 
 			// ставим слайдер на нужный слайд
-			this.sliderDraw();
+			_.moveSlider();
 		});
 
 		// подготовка к движению слайдера
-		this.sliderToggle();
+		// _.sliderToggle();
 
 		// ставим слайдер на нужный слайд
-		this.sliderDraw();
+		_.moveSlider();
 	}
 
 	setSliderSize() {
-		this.width = this.slider.offsetWidth;
-		this.sliderList.style.width = (this.width * this.slideLength) + (this.gap * this.slideLength) + 'px';
-		this.sliderList.style.height = this.sliderItem[this.countVisible].querySelector('.bolt-slider__content').offsetHeight + 'px';
+		let _ = this;
+		_.width = _.slider.offsetWidth;
+		_.sliderList.style.width = (_.width * _.slideLength) + (_.gap * _.slideLength) + 'px';
+		_.sliderList.style.height = _.sliderItem[_.currentSlide].querySelector('.bolt-slider__content').offsetHeight + 'px';
 
-		this.sliderItem.forEach(item => {
-			item.style.width = this.width + 'px';
+		_.sliderItem.forEach(item => {
+			item.style.width = _.width + 'px';
 
-			if (this.gap) {
-				item.style.marginRight = this.gap + 'px';
+			if (_.gap) {
+				item.style.marginRight = _.gap + 'px';
 			}
 		});
 	}
 
-	// подготовка к движению слайдера
-	sliderToggle() {
-
-		if (this.sliderPrew) {
-			this.sliderPrew.addEventListener('click', () => {
-				this.countVisible--;
-
-				if (this.countVisible < 0) {
-					return this.countVisible = 0;
-				}
-
-				this.sliderAnimation();
-			});
-		}
-
-		if (this.sliderNext) {
-			this.sliderNext.addEventListener('click', () => {
-				this.countVisible++;
-
-				if (this.countVisible >= this.slideLength) {
-					return this.countVisible = this.slideLength - 1;
-				}
-
-				this.sliderAnimation();
-			});
-		}
-
-		if (this.paginationWrap) {
-			this.setPagination();
-		}
-
+	moveSlider() {
+		let _ = this;
+		_.sliderList.style.transform = `translateX(-${(_.currentSlide * _.width) + (_.gap * _.currentSlide)}px)`;
+		_.sliderList.style.height = _.sliderItem[_.currentSlide].querySelector('.bolt-slider__content').offsetHeight + 'px';
 	}
-
-	setPagination() {
-
-		for (let i = 0; i < this.slideLength; i++) {
-			let btn = document.createElement(this.paginationTag);
-			btn.classList.add(this.paginationClass);
-
-			this.paginationWrap.append(btn);
-
-			if (this.paginationTag == 'button') {
-				btn.dataset.count = i;
-				btn.ariaLabel = this.paginationAria + ' ' + (i + 1) + '.';
-				btn.addEventListener('click', () => {
-					this.countVisible = i;
-					this.sliderAnimation();
-				});
-
-			}
-			this.paginations.push(btn);
-
-		}
-	}
-
-	// Движение слайдера
-	sliderDraw() {
-		this.sliderList.style.transform = `translateX(-${(this.countVisible * this.width) + (this.gap * this.countVisible)}px)`;
-
-		// навигация
-		if (this.sliderPrew.disabled == true) {
-			this.sliderPrew.disabled = false;
-		}
-		if (this.sliderPrew && this.countVisible <= 0) {
-			this.sliderPrew.disabled = true;
-		}
-
-		if (this.sliderNext.disabled == true) {
-			this.sliderNext.disabled = false;
-		}
-		if (this.sliderNext && this.countVisible >= this.slideLength - 1) {
-			this.sliderNext.disabled = true;
-		}
-
-		// пагинация
-		if (this.paginationWrap) {
-			if (this.paginationTag == 'button') {
-				if (this.paginationWrap && this.paginationWrap.querySelector(':disabled')) {
-					this.paginationWrap.querySelector(':disabled').disabled = false;
-				}
-				this.paginations[this.countVisible].disabled = true;
-			}
-			if (this.paginationWrap.querySelector('.' + this.paginationClass + '--active')) {
-				this.paginationWrap.querySelector('.' + this.paginationClass + '--active').classList.remove(this.paginationClass + '--active');
-			}
-			this.paginations[this.countVisible].classList.add(this.paginationClass + '--active');
-		}
-
-		// слайды
-		if (this.sliderList.querySelector('.bolt-slider__item--active')) {
-			this.removeActive = this.sliderList.querySelector('.bolt-slider__item--active');
-
-			if (this.removeActive == this.sliderList.querySelectorAll('.bolt-slider__item')[this.countVisible]) return;
-			this.removeActive.ariaLive = 'off';
-		}
-
-		this.sliderItem.forEach(slide => {
-			slide.classList.add('bolt-slider__item--active');
-		});
-
-		setTimeout(() => {
-			if (this.removeActive) {
-				this.removeActive.classList.remove('bolt-slider__item--active');
-			}
-
-			this.sliderItem.forEach(slide => {
-				slide.classList.remove('bolt-slider__item--active');
-			});
-
-			this.removeActive = false;
-			this.sliderItem[this.countVisible].classList.add('bolt-slider__item--active');
-		}, this.speed);
-
-		this.sliderItem[this.countVisible].ariaLive = 'polite';
-
-		this.sliderList.style.height = this.sliderItem[this.countVisible].querySelector('.bolt-slider__content').offsetHeight + 'px';
-
-	}
-
-	// движение слайдера с анимацией
-	sliderAnimation() {
-		this.sliderList.style.transition = `transform ${this.speed}ms ease-in-out, height ${this.speed}ms ease-in-out`;
-		this.sliderDraw();
-
-		setTimeout(() => {
-			this.sliderList.style.transition = `transform 0ms ease-in-out, height 0ms ease-in-out`;
-		}, this.speed)
-	}
-
-	// касание
-	touthMove() {
-
-		this.sliderList.addEventListener("touchstart", (e) => {
-			this.startClientX = e.touches[0].clientX;
-		})
-
-		this.sliderList.addEventListener("touchmove", (e) => {
-			this.sliderItem.forEach(slide => {
-				slide.classList.add('bolt-slider__item--active');
-			});
-			this.touchMove = this.startClientX - e.touches[0].clientX;
-			if (
-				((this.countVisible * this.width) + (this.gap * this.countVisible) + this.touchMove) >=
-				0
-			) {
-
-				if (
-					((this.countVisible * this.width) + (this.gap * this.countVisible) + this.touchMove) <=
-					(this.width * (this.slideLength - 1) + this.gap * (this.slideLength - 1))
-				) {
-					this.sliderList.style.transform = `translateX(-${(this.countVisible * this.width) + (this.gap * this.countVisible) + this.touchMove}px)`;
-				}
-			}
-
-		});
-
-		this.sliderList.addEventListener("touchend", (e) => {
-			if ((this.touchMove < 30) && this.touchMove > -30) {
-				return this.sliderAnimation();
-			}
-
-			if (this.touchMove > 0) {
-				this.countVisible++;
-				if (this.countVisible >= this.slideLength - 1) {
-					this.countVisible = this.slideLength - 1;
-				}
-				this.sliderAnimation();
-			}
-
-			if (this.touchMove < 0) {
-				this.countVisible--;
-				if (this.countVisible < 0) {
-					this.countVisible = 0;
-				}
-				this.sliderAnimation();
-			}
-
-			this.touchMove = 0;
-		})
-
-	}
-
 }

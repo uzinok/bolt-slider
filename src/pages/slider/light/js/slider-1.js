@@ -1,14 +1,14 @@
 const slider1 = new boltSlider({
-	slider: document.querySelector('.slider-1'),
+	slider: '.slider-1',
 
 	roledescription: 'слайдер',
 	slideRoledescription: 'слайд',
 	slideAria: 'из',
 
-	sliderPrew: document.querySelector('.prew-1'),
-	sliderNext: document.querySelector('.next-1'),
+	sliderPrew: '.prew-1',
+	sliderNext: '.next-1',
 
-	paginationWrap: document.querySelector('.pagination-1'),
+	paginationWrap: '.pagination-1',
 	paginationTag: 'button',
 	paginationClass: 'bolt-slider__pagination-btn',
 	paginationAria: 'Показать слайд'

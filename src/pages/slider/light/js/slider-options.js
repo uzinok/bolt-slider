@@ -22,7 +22,7 @@ setSliderSize();
 sliderToggle();
 setPagination();
 // Движение слайдера
-sliderDraw();
+moveSlider();
 // движение слайдера с анимацией
 sliderAnimation();
 // касание

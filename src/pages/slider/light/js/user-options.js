@@ -6,7 +6,7 @@ this.roledescription = options.roledescription || 'carousel';
 this.slideRoledescription = options.slideRoledescription || 'slide';
 
 this.gap = options.gap || 0;
-this.countVisible = options.countVisible || 0;
+this.currentSlide = options.currentSlide || 0;
 this.speed = options.speed || 300;
 
 this.sliderPrew = options.sliderPrew || false;

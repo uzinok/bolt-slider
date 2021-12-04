@@ -133,14 +133,28 @@ class boltSlider {
 		});
 	}
 
-	moveSlider() {
+	setPagination() {
 		let _ = this;
 
-		_.sliderList.style.transform = `translateX(-${(_.currentSlide * _.width) + (_.gap * _.currentSlide)}px)`;
-		_.sliderList.style.height = _.sliderItems[_.currentSlide].querySelector('.bolt-slider__content').offsetHeight + 'px';
+		for (let i = 0; i < _.slideLength; i++) {
+			let btn = document.createElement(_.paginationTag);
+			btn.classList.add(_.paginationClass);
 
-		if (_.paginationWrap) {
-			_.updatePagination();
+			_.paginationWrap.append(btn);
+
+			if (_.paginationTag == 'button') {
+				btn.dataset.count = i;
+				btn.ariaLabel = _.paginationAria + ' ' + (i + 1) + '.';
+				btn.addEventListener('click', () => {
+					_.currentSlide = i;
+
+					_.updateSlide();
+					_.moveSlider();
+				});
+
+			}
+			_.paginations.push(btn);
+
 		}
 	}
 
@@ -174,6 +188,23 @@ class boltSlider {
 		})
 	}
 
+	moveSlider() {
+		let _ = this;
+
+		_.sliderList.style.transform = `translateX(-${(_.currentSlide * _.width) + (_.gap * _.currentSlide)}px)`;
+		_.sliderList.style.height = _.sliderItems[_.currentSlide].querySelector('.bolt-slider__content').offsetHeight + 'px';
+
+		if (_.paginationWrap) {
+			_.updatePagination();
+		}
+		if (_.sliderNext) {
+			_.updateSlideNext();
+		}
+		if (_.sliderPrew) {
+			_.updateSlidePrew();
+		}
+	}
+
 	updateSlide() {
 		let _ = this;
 
@@ -193,31 +224,6 @@ class boltSlider {
 
 	}
 
-	setPagination() {
-		let _ = this;
-
-		for (let i = 0; i < _.slideLength; i++) {
-			let btn = document.createElement(_.paginationTag);
-			btn.classList.add(_.paginationClass);
-
-			_.paginationWrap.append(btn);
-
-			if (_.paginationTag == 'button') {
-				btn.dataset.count = i;
-				btn.ariaLabel = _.paginationAria + ' ' + (i + 1) + '.';
-				btn.addEventListener('click', () => {
-					_.currentSlide = i;
-
-					_.updateSlide();
-					_.moveSlider();
-				});
-
-			}
-			_.paginations.push(btn);
-
-		}
-	}
-
 	updatePagination() {
 		let _ = this;
 
@@ -230,6 +236,26 @@ class boltSlider {
 
 		_.paginations[_.currentSlide].disabled = true;
 		_.paginations[_.currentSlide].classList.add(_.paginationClass + '--active');
+	}
+
+	updateSlideNext() {
+		let _ = this;
+		if (_.sliderNext.disabled == true && _.currentSlide < _.slideLength - 1) {
+			_.sliderNext.disabled = false;
+		}
+		if (_.currentSlide >= _.slideLength - 1) {
+			_.sliderNext.disabled = true;
+		}
+	}
+
+	updateSlidePrew() {
+		let _ = this;
+		if (_.sliderPrew.disabled == true && _.currentSlide > 0) {
+			_.sliderPrew.disabled = false;
+		}
+		if (_.currentSlide <= 0) {
+			_.sliderPrew.disabled = true;
+		}
 	}
 
 }

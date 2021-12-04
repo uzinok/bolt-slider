@@ -131,6 +131,10 @@ class boltSlider {
 
 		_.sliderList.style.transform = `translateX(-${(_.currentSlide * _.width) + (_.gap * _.currentSlide)}px)`;
 		_.sliderList.style.height = _.sliderItems[_.currentSlide].querySelector('.bolt-slider__content').offsetHeight + 'px';
+
+		if (_.paginationWrap) {
+			_.updatePagination();
+		}
 	}
 
 	updateSlide() {
@@ -166,6 +170,7 @@ class boltSlider {
 				btn.ariaLabel = _.paginationAria + ' ' + (i + 1) + '.';
 				btn.addEventListener('click', () => {
 					_.currentSlide = i;
+
 					_.updateSlide();
 					_.moveSlider();
 				});
@@ -174,6 +179,20 @@ class boltSlider {
 			_.paginations.push(btn);
 
 		}
+	}
+
+	updatePagination() {
+		let _ = this;
+
+		if (_.paginationWrap.querySelector('.bolt-slider__pagination-btn--active')) {
+			if (_.paginationTag == 'button') {
+				_.paginationWrap.querySelector('.bolt-slider__pagination-btn--active').disabled = false;
+				_.paginationWrap.querySelector('.bolt-slider__pagination-btn--active').classList.remove(_.paginationClass + '--active');
+			}
+		}
+
+		_.paginations[_.currentSlide].disabled = true;
+		_.paginations[_.currentSlide].classList.add(_.paginationClass + '--active');
 	}
 
 }

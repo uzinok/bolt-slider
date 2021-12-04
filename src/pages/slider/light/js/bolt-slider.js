@@ -8,11 +8,11 @@ class boltSlider {
 		// errors user options
 		if (!options) {
 			return console.warn('Not slider options');
-		};
+		}
 
 		if (!document.querySelector(options.slider)) {
 			return console.warn('Not slider');
-		};
+		}
 
 		if (options.sliderPrew && !document.querySelector(options.sliderPrew)) {
 			console.warn('Not options sliderPrew');
@@ -43,7 +43,7 @@ class boltSlider {
 		_.sliderPrew = options.sliderPrew || false;
 		_.sliderNext = options.sliderNext || false;
 
-		_.paginationWrap = options.paginationWrap || false;
+		_.paginationWrap = document.querySelector(options.paginationWrap) || false;
 		_.paginationTag = options.paginationTag || 'span';
 		_.paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
 		_.paginationAria = options.paginationAria || 'Go to slide';
@@ -91,19 +91,22 @@ class boltSlider {
 			_.sliderItems[i].setAttribute('aria-roledescription', _.slideRoledescription);
 		}
 
+		// следим за шириной слайдера
 		_.setSliderSize();
 		window.addEventListener('resize', () => {
 			_.setSliderSize();
-
-			// ставим слайдер на нужный слайд
+			// сдвигаем на нужный слайд
 			_.moveSlider();
 		});
 
-		// подготовка к движению слайдера
-		// _.sliderToggle();
+		// при необходимости создаем кнопки пагинации
+		if (_.paginationWrap) {
+			_.setPagination();
+		}
 
-		// ставим слайдер на нужный слайд
+		// показываем нужный слайд
 		_.updateSlide();
+		// сдвигаем на нужный слайд
 		_.moveSlider();
 	}
 
@@ -147,6 +150,30 @@ class boltSlider {
 			_.sliderItems[_.currentSlide].ariaLive = 'polite';
 		}
 
+	}
+
+	setPagination() {
+		let _ = this;
+
+		for (let i = 0; i < _.slideLength; i++) {
+			let btn = document.createElement(_.paginationTag);
+			btn.classList.add(_.paginationClass);
+
+			_.paginationWrap.append(btn);
+
+			if (_.paginationTag == 'button') {
+				btn.dataset.count = i;
+				btn.ariaLabel = _.paginationAria + ' ' + (i + 1) + '.';
+				btn.addEventListener('click', () => {
+					_.currentSlide = i;
+					_.updateSlide();
+					_.moveSlider();
+				});
+
+			}
+			_.paginations.push(btn);
+
+		}
 	}
 
 }

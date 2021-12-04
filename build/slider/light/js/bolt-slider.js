@@ -18,13 +18,9 @@ var boltSlider = /*#__PURE__*/function () {
       return console.warn('Not slider options');
     }
 
-    ;
-
     if (!document.querySelector(options.slider)) {
       return console.warn('Not slider');
     }
-
-    ;
 
     if (options.sliderPrew && !document.querySelector(options.sliderPrew)) {
       console.warn('Not options sliderPrew');
@@ -52,7 +48,7 @@ var boltSlider = /*#__PURE__*/function () {
     _.autoPlay = options.autoPlay || false;
     _.sliderPrew = options.sliderPrew || false;
     _.sliderNext = options.sliderNext || false;
-    _.paginationWrap = options.paginationWrap || false;
+    _.paginationWrap = document.querySelector(options.paginationWrap) || false;
     _.paginationTag = options.paginationTag || 'span';
     _.paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
     _.paginationAria = options.paginationAria || 'Go to slide'; // errors slider options
@@ -105,20 +101,25 @@ var boltSlider = /*#__PURE__*/function () {
         _.sliderItems[i].ariaLive = 'off';
 
         _.sliderItems[i].setAttribute('aria-roledescription', _.slideRoledescription);
-      }
+      } // следим за шириной слайдера
+
 
       _.setSliderSize();
 
       window.addEventListener('resize', function () {
-        _.setSliderSize(); // ставим слайдер на нужный слайд
+        _.setSliderSize(); // сдвигаем на нужный слайд
 
 
         _.moveSlider();
-      }); // подготовка к движению слайдера
-      // _.sliderToggle();
-      // ставим слайдер на нужный слайд
+      }); // при необходимости создаем кнопки пагинации
 
-      _.updateSlide();
+      if (_.paginationWrap) {
+        _.setPagination();
+      } // показываем нужный слайд
+
+
+      _.updateSlide(); // сдвигаем на нужный слайд
+
 
       _.moveSlider();
     }
@@ -164,6 +165,36 @@ var boltSlider = /*#__PURE__*/function () {
 
       if (!_.checkAutoPlay) {
         _.sliderItems[_.currentSlide].ariaLive = 'polite';
+      }
+    }
+  }, {
+    key: "setPagination",
+    value: function setPagination() {
+      var _ = this;
+
+      var _loop = function _loop(i) {
+        var btn = document.createElement(_.paginationTag);
+        btn.classList.add(_.paginationClass);
+
+        _.paginationWrap.append(btn);
+
+        if (_.paginationTag == 'button') {
+          btn.dataset.count = i;
+          btn.ariaLabel = _.paginationAria + ' ' + (i + 1) + '.';
+          btn.addEventListener('click', function () {
+            _.currentSlide = i;
+
+            _.updateSlide();
+
+            _.moveSlider();
+          });
+        }
+
+        _.paginations.push(btn);
+      };
+
+      for (var i = 0; i < _.slideLength; i++) {
+        _loop(i);
       }
     }
   }]);

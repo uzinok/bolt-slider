@@ -40,8 +40,8 @@ class boltSlider {
 		_.speed = options.speed || 300;
 		_.autoPlay = options.autoPlay || false;
 
-		_.sliderPrew = options.sliderPrew || false;
-		_.sliderNext = options.sliderNext || false;
+		_.sliderPrew = document.querySelector(options.sliderPrew) || false;
+		_.sliderNext = document.querySelector(options.sliderNext) || false;
 
 		_.paginationWrap = document.querySelector(options.paginationWrap) || false;
 		_.paginationTag = options.paginationTag || 'span';
@@ -104,6 +104,13 @@ class boltSlider {
 			_.setPagination();
 		}
 
+		if (_.sliderNext) {
+			_.moveNext();
+		}
+		if (_.sliderPrew) {
+			_.movePrew();
+		}
+
 		// показываем нужный слайд
 		_.updateSlide();
 		// сдвигаем на нужный слайд
@@ -135,6 +142,36 @@ class boltSlider {
 		if (_.paginationWrap) {
 			_.updatePagination();
 		}
+	}
+
+	moveNext() {
+		let _ = this;
+
+		_.sliderNext.addEventListener('click', () => {
+			_.currentSlide++;
+
+			if (_.currentSlide >= _.slideLength) {
+				return _.currentSlide = _.slideLength - 1;
+			}
+
+			_.updateSlide();
+			_.moveSlider();
+		})
+	}
+
+	movePrew() {
+		let _ = this;
+
+		_.sliderPrew.addEventListener('click', () => {
+			_.currentSlide--;
+
+			if (_.currentSlide < 0) {
+				return _.currentSlide = 0;
+			}
+
+			_.updateSlide();
+			_.moveSlider();
+		})
 	}
 
 	updateSlide() {

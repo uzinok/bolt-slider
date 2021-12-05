@@ -70,6 +70,7 @@ class boltSlider {
 		_.paginations = [];
 		_.removeActive = false;
 		_.checkAutoPlay = _.autoPlay;
+		_.setIntervalAutoPlay = false;
 
 		if (_.currentSlide > _.slideLength) {
 			_.currentSlide = 0;
@@ -111,7 +112,7 @@ class boltSlider {
 		_.moveSlider();
 
 		if (_.checkAutoPlay) {
-			_.autoPlayDraw();
+			_.autoPlayControl();
 		}
 	}
 
@@ -223,6 +224,10 @@ class boltSlider {
 			_.sliderItems[_.currentSlide].ariaLive = 'polite';
 		}
 
+		if (!_.checkAutoPlay) {
+			_.updateAriaSlide();
+		}
+
 	}
 
 	updatePagination() {
@@ -290,10 +295,10 @@ class boltSlider {
 		_.sliderList.style.transitionDuration = `0ms, 0ms`;
 	}
 
-	autoPlayDraw() {
+	drawAutoPlay() {
 		let _ = this;
 
-		setInterval(() => {
+		_.setIntervalAutoPlay = setInterval(() => {
 
 			if (_.currentSlide == _.slideLength - 1) {
 				_.currentSlide = -1;
@@ -302,4 +307,37 @@ class boltSlider {
 			_.nextSlider();
 		}, _.autoplaySpeed);
 	}
+
+	stopAutoPlay() {
+		let _ = this;
+
+		clearInterval(_.setIntervalAutoPlay);
+	}
+
+	autoPlayControl() {
+		let _ = this;
+
+		_.drawAutoPlay();
+
+		_.slider.addEventListener('mouseover', () => {
+			_.stopAutoPlay();
+		});
+
+		_.slider.addEventListener('mouseout', () => {
+			if (_.checkAutoPlay) {
+				_.drawAutoPlay();
+			}
+		});
+
+		_.slider.addEventListener('click', () => {
+			_.stopAutoPlay();
+			_.checkAutoPlay = false;
+		});
+
+	}
+
+	updateAriaSlide() {
+		console.log('aria update');
+	}
+
 }

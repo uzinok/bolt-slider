@@ -6,7 +6,6 @@ const slider1 = new boltSlider({
 
 	roledescription: 'слайдер',
 	slideRoledescription: 'слайд',
-	slideAria: 'из',
 
 	sliderPrew: '.prew-1',
 	sliderNext: '.next-1',

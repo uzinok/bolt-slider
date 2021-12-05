@@ -28,7 +28,6 @@ class boltSlider {
 		// user options
 		_.slider = document.querySelector(options.slider);
 
-		_.slideAria = options.slideAria || 'of';
 		_.roledescription = options.roledescription || 'carousel';
 		_.slideRoledescription = options.slideRoledescription || 'slide';
 

@@ -2,6 +2,7 @@ const slider1 = new boltSlider({
 	slider: '.slider-1',
 
 	autoPlay: true,
+	autoplaySpeed: 2000,
 
 	roledescription: 'слайдер',
 	slideRoledescription: 'слайд',

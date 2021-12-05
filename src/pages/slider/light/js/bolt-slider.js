@@ -36,6 +36,7 @@ class boltSlider {
 		_.currentSlide = options.currentSlide || 0;
 		_.speed = options.speed || 300;
 		_.autoPlay = options.autoPlay || false;
+		_.autoplaySpeed = options.autoplaySpeed || 0;
 
 		_.sliderPrew = document.querySelector(options.sliderPrew) || false;
 		_.sliderNext = document.querySelector(options.sliderNext) || false;
@@ -108,6 +109,10 @@ class boltSlider {
 
 		_.updateSlide();
 		_.moveSlider();
+
+		if (_.checkAutoPlay) {
+			_.autoPlayDraw();
+		}
 	}
 
 	setSliderSize() {
@@ -154,14 +159,19 @@ class boltSlider {
 		let _ = this;
 
 		_.sliderNext.addEventListener('click', () => {
-			_.currentSlide++;
-
-			if (_.currentSlide >= _.slideLength) {
-				return _.currentSlide = _.slideLength - 1;
-			}
-			_.sliderAnimation();
-			_.moveSlider();
+			_.nextSlider();
 		})
+	}
+
+	nextSlider() {
+		let _ = this;
+		_.currentSlide++;
+
+		if (_.currentSlide >= _.slideLength) {
+			return _.currentSlide = _.slideLength - 1;
+		}
+		_.sliderAnimation();
+		_.moveSlider();
 	}
 
 	movePrew() {
@@ -231,6 +241,7 @@ class boltSlider {
 
 	updateSlideNext() {
 		let _ = this;
+
 		if (_.sliderNext.disabled == true && _.currentSlide < _.slideLength - 1) {
 			_.sliderNext.disabled = false;
 		}
@@ -279,5 +290,16 @@ class boltSlider {
 		_.sliderList.style.transitionDuration = `0ms, 0ms`;
 	}
 
+	autoPlayDraw() {
+		let _ = this;
 
+		setInterval(() => {
+
+			if (_.currentSlide == _.slideLength - 1) {
+				_.currentSlide = -1;
+			}
+
+			_.nextSlider();
+		}, _.autoplaySpeed);
+	}
 }

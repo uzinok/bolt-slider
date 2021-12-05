@@ -75,6 +75,8 @@ var boltSlider = /*#__PURE__*/function () {
     _.sliderListWrap = _.slider.querySelector('.bolt-slider__list-wrap');
     _.sliderList = _.slider.querySelector('.bolt-slider__list');
     _.sliderItems = _.sliderList.querySelectorAll('.bolt-slider__item');
+    _.sliderItems = Array.prototype.slice.call(_.sliderItems); // for IE
+
     _.slide = _.sliderList.querySelectorAll('.bolt-slider__content');
     _.slideLength = _.sliderItems.length;
     _.paginations = [];
@@ -159,7 +161,7 @@ var boltSlider = /*#__PURE__*/function () {
         var btn = document.createElement(_.paginationTag);
         btn.classList.add(_.paginationClass);
 
-        _.paginationWrap.append(btn);
+        _.paginationWrap.appendChild(btn);
 
         if (_.paginationTag == 'button') {
           btn.ariaLabel = _.paginationAria + ' ' + (i + 1) + '.';
@@ -257,10 +259,6 @@ var boltSlider = /*#__PURE__*/function () {
 
       if (!_.checkAutoPlay) {
         _.sliderItems[_.currentSlide].ariaLive = 'polite';
-      }
-
-      if (!_.checkAutoPlay) {
-        _.updateAriaSlide();
       }
     }
   }, {
@@ -368,26 +366,26 @@ var boltSlider = /*#__PURE__*/function () {
 
       _.drawAutoPlay();
 
-      _.slider.addEventListener('mouseover', function () {
+      var mouseover = _.slider.addEventListener('mouseover', function () {
         _.stopAutoPlay();
       });
 
-      _.slider.addEventListener('mouseout', function () {
+      var mouseout = _.slider.addEventListener('mouseout', function () {
         if (_.checkAutoPlay) {
           _.drawAutoPlay();
+
+          console.log('lll');
         }
       });
 
-      _.slider.addEventListener('click', function () {
+      var click = _.slider.addEventListener('click', function () {
         _.stopAutoPlay();
 
         _.checkAutoPlay = false;
+        removeEventListener('mouseover', mouseover, false);
+        removeEventListener('mouseout', mouseout, false);
+        removeEventListener('click', click, false);
       });
-    }
-  }, {
-    key: "updateAriaSlide",
-    value: function updateAriaSlide() {
-      console.log('aria update');
     }
   }]);
 

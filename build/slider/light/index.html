@@ -1,9 +1,10 @@
 <!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Простой слайдер. BOLT-SLIDER набор плагинов для создания слайдеров на сайте.</title><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="./css/bolt-slider.css"><script src="./js/bolt-slider.js"></script></head><body><div class="container"><h1>BOLT-SLIDER набор плагинов для создания слайдеров на сайте.</h1><nav><ul><li><p><a href="/">Описание проекта</a></p></li><li><p><a href="/slider/light/">Простой слайдер.</a> Слайдер с минимальным количеством опций.</p></li></ul></nav></div><section class="container"><h2>Примеры простого слайдера</h2><p>Стили кнопок пагинации только для демонстрации.</p><p><a href="https://github.com/uzinok/bolt-slider/blob/master/src/pages/slider/light/js/bolt-slider.js" target="_blank">js-код</a>
-<a href="https://github.com/uzinok/bolt-slider/blob/master/src/pages/slider/light/css/bolt-slider.less" target="_blank">less-код</a></p></section><section class="container"><div class="bolt-slider slider-1 bolt-no-js"><button class="prew prew-1">Назад</button><button class="next next-1">Вперед</button><div class="bolt-slider__list-wrap"><div class="bolt-slider__list"><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Эй, <a href="#">цирюльникъ</a>, ёжик выстриги, да щетину ряхи сбрей, феном вошь за печь гони!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Экс-граф? Плюш изъят. Бьём чуждый цен хвощ!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>— Любя, съешь щипцы, — вздохнёт мэр, — кайф жгуч</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>В чащах юга жил-был цитрус... — да, но фальшивый экземпляръ!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Южно-эфиопский грач увёл мышь за хобот на съезд ящериц.</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Аэрофотосъёмка ландшафта уже выявила земли богачей и процветающих крестьян.</p></div></div></div></div><div class="bolt-slider__pagination pagination-1"></div></div><pre><code>const slider1 = new boltSlider({
+<a href="https://github.com/uzinok/bolt-slider/blob/master/src/pages/slider/light/css/bolt-slider.less" target="_blank">less-код</a></p></section><section class="container"><button class="play play-1">Play/Pause</button><div class="bolt-slider slider-1 bolt-no-js"><button class="prew prew-1">Назад</button><button class="next next-1">Вперед</button><div class="bolt-slider__list-wrap"><div class="bolt-slider__list"><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Эй, <a href="#">цирюльникъ</a>, ёжик выстриги, да щетину ряхи сбрей, феном вошь за печь гони!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Экс-граф? Плюш изъят. Бьём чуждый цен хвощ!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>— Любя, съешь щипцы, — вздохнёт мэр, — кайф жгуч</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>В чащах юга жил-был цитрус... — да, но фальшивый экземпляръ!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Южно-эфиопский грач увёл мышь за хобот на съезд ящериц.</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Аэрофотосъёмка ландшафта уже выявила земли богачей и процветающих крестьян.</p></div></div></div></div><div class="bolt-slider__pagination pagination-1"></div></div><pre><code>const slider1 = new boltSlider({
 	slider: '.slider-1',
 
 	autoPlay: true,
-	autoplaySpeed: 5000,
+	autoplaySpeed: 3000,
+	playButton: '.play-1',
 
 	roledescription: 'слайдер',
 	slideRoledescription: 'слайд',
@@ -20,7 +21,8 @@
 	slider: '.slider-1',
 
 	autoPlay: true,
-	autoplaySpeed: 5000,
+	autoplaySpeed: 3000,
+	playButton: '.play-1',
 
 	roledescription: 'слайдер',
 	slideRoledescription: 'слайд',
@@ -78,5 +80,58 @@
 	paginationClass: 'bolt-slider__pagination-btn',
 });
 </script></section><section class="container"><h2>Пользовательские опции</h2><pre><code>// user options
+
+slider = document.querySelector(options.slider);
+
+roledescription = options.roledescription || 'carousel';
+slideRoledescription = options.slideRoledescription || 'slide';
+
+gap = options.gap || 0;
+currentSlide = options.currentSlide || 0;
+speed = options.speed || 300;
+
+autoPlay = options.autoPlay || false;
+autoplaySpeed = options.autoplaySpeed || 0;
+playButton = document.querySelector(options.playButton); // класс используется для обозначения включен/выключен autoPlay
+
+sliderPrew = document.querySelector(options.sliderPrew) || false;
+sliderNext = document.querySelector(options.sliderNext) || false;
+
+paginationWrap = document.querySelector(options.paginationWrap) || false;
+paginationTag = options.paginationTag || 'span';
+paginationClass = options.paginationClass || 'bolt-slider__paginaton-btn';
+paginationAria = options.paginationAria || 'Go to slide';
 </code></pre><h2>Свойства и методы слайдера</h2><pre><code>// slider options
+
+width = 0;
+sliderListWrap = _.slider.querySelector('.bolt-slider__list-wrap');
+sliderList = _.slider.querySelector('.bolt-slider__list');
+sliderItems = _.sliderList.querySelectorAll('.bolt-slider__item');
+sliderItems = Array.prototype.slice.call(_.sliderItems); // for IE
+slide = _.sliderList.querySelectorAll('.bolt-slider__content');
+slideLength = _.sliderItems.length;
+paginations = [];
+checkAutoPlay = _.autoPlay;
+playClass = options.playButton || false;
+setIntervalAutoPlay = false;
+
+sliderInit();
+setSliderSize();
+setPagination();
+moveNext();
+nextSlider();
+movePrew();
+moveSlider();
+updateSlide();
+updatePagination();
+updateSlideNext();
+updateSlidePrew();
+sliderAnimation();
+setAnimation();
+removeAnimation();
+drawAutoPlay();
+pauseAutoPlay();
+autoPlayControl();
+stopAutoPlay();
+controllPlayButton();
 </code></pre></section><footer><p><a href="https://github.com/uzinok/bolt-slider">github.com</a></p></footer></body></html>

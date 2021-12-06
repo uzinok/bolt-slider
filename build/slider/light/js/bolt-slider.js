@@ -19,21 +19,26 @@ var boltSlider = /*#__PURE__*/function () {
     }
 
     if (!document.querySelector(options.slider)) {
-      return console.warn('Not slider');
+      return console.warn('didn\'t get html element: slider');
     }
 
     if (options.sliderPrew && !document.querySelector(options.sliderPrew)) {
-      console.warn('Not options sliderPrew');
+      console.warn('didn\'t get html element: sliderPrew');
       options.sliderPrew = false;
     }
 
+    if (options.playButton && !document.querySelector(options.playButton)) {
+      console.warn('didn\'t get html element: sliderPrew');
+      options.playButton = false;
+    }
+
     if (options.sliderNext && !document.querySelector(options.sliderNext)) {
-      console.warn('Not options sliderNext');
+      console.warn('didn\'t get html element: sliderNext');
       options.sliderNext = false;
     }
 
     if (options.paginationWrap && !document.querySelector(options.paginationWrap)) {
-      console.warn('Not options paginationWrap');
+      console.warn('didn\'t get html element: paginationWrap');
       options.paginationWrap = false;
     } // user options
 
@@ -45,7 +50,10 @@ var boltSlider = /*#__PURE__*/function () {
     _.currentSlide = options.currentSlide || 0;
     _.speed = options.speed || 300;
     _.autoPlay = options.autoPlay || false;
-    _.autoplaySpeed = options.autoplaySpeed || 0;
+    _.autoplaySpeed = options.autoplaySpeed || 0; // playClass for slider options
+
+    _.playClass = options.playButton || false;
+    _.playButton = document.querySelector(options.playButton);
     _.sliderPrew = document.querySelector(options.sliderPrew) || false;
     _.sliderNext = document.querySelector(options.sliderNext) || false;
     _.paginationWrap = document.querySelector(options.paginationWrap) || false;
@@ -54,19 +62,19 @@ var boltSlider = /*#__PURE__*/function () {
     _.paginationAria = options.paginationAria || 'Go to slide'; // errors slider options
 
     if (!_.slider.querySelector('.bolt-slider__list-wrap')) {
-      return console.warn('Not slider wrap list');
+      return console.warn('didn\'t get html element: slider wrap list');
     }
 
     if (!_.slider.querySelector('.bolt-slider__list')) {
-      return console.warn('Not slider list');
+      return console.warn('didn\'t get html element: slider list');
     }
 
     if (!_.slider.querySelector('.bolt-slider__item')) {
-      return console.warn('Not slider items');
+      return console.warn('didn\'t get html element: slider items');
     }
 
     if (!_.slider.querySelector('.bolt-slider__content')) {
-      return console.warn('Not slider contents');
+      return console.warn('didn\'t get html element: slider contents');
     } // slider options
 
 
@@ -131,6 +139,10 @@ var boltSlider = /*#__PURE__*/function () {
 
       if (_.checkAutoPlay) {
         _.autoPlayControl();
+      }
+
+      if (_.playButton) {
+        _.controllPlayButton();
       }
     }
   }, {
@@ -367,8 +379,6 @@ var boltSlider = /*#__PURE__*/function () {
       var mouseout = _.slider.addEventListener('mouseout', function () {
         if (_.checkAutoPlay) {
           _.drawAutoPlay();
-
-          console.log('lll');
         }
       });
 
@@ -402,6 +412,29 @@ var boltSlider = /*#__PURE__*/function () {
       removeEventListener('click', clickNext, false);
       removeEventListener('click', clickPrew, false);
       removeEventListener('click', clickPagination, false);
+    }
+  }, {
+    key: "controllPlayButton",
+    value: function controllPlayButton() {
+      var _ = this;
+
+      _.playButton.classList.toggle(_.playClass + '--play');
+
+      _.playButton.addEventListener('click', function () {
+        _.playButton.classList.toggle(_.playClass + '--play');
+
+        _.playButton.classList.toggle(_.playClass + '--paused');
+
+        if (_.checkAutoPlay) {
+          _.checkAutoPlay = false;
+
+          _.stopAutoPlay();
+        } else {
+          _.checkAutoPlay = true;
+
+          _.drawAutoPlay();
+        }
+      });
     }
   }]);
 

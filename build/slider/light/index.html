@@ -2,12 +2,16 @@
 <a href="https://github.com/uzinok/bolt-slider/blob/master/src/pages/slider/light/css/bolt-slider.less" target="_blank">less-код</a></p></section><section class="container"><button class="play play-1">Play/Pause</button><div class="bolt-slider slider-1 bolt-no-js"><button class="prew prew-1">Назад</button><button class="next next-1">Вперед</button><div class="bolt-slider__list-wrap"><div class="bolt-slider__list"><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Эй, <a href="#">цирюльникъ</a>, ёжик выстриги, да щетину ряхи сбрей, феном вошь за печь гони!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Экс-граф? Плюш изъят. Бьём чуждый цен хвощ!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Эй, жлоб! Где туз? Прячь юных съёмщиц в шкаф.</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>— Любя, съешь щипцы, — вздохнёт мэр, — кайф жгуч</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>В чащах юга жил-был цитрус... — да, но фальшивый экземпляръ!</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Южно-эфиопский грач увёл мышь за хобот на съезд ящериц.</p></div></div><div class="bolt-slider__item"><div class="bolt-slider__content"><p>Аэрофотосъёмка ландшафта уже выявила земли богачей и процветающих крестьян.</p></div></div></div></div><div class="bolt-slider__pagination pagination-1"></div></div><pre><code>const slider1 = new boltSlider({
 	slider: '.slider-1',
 
+	roledescription: 'слайдер',
+	slideRoledescription: 'слайд',
+
+	gap: 20,
+	currentSlide: 1,
+	speed: 500,
+
 	autoPlay: true,
 	autoplaySpeed: 3000,
 	playButton: '.play-1',
-
-	roledescription: 'слайдер',
-	slideRoledescription: 'слайд',
 
 	sliderPrew: '.prew-1',
 	sliderNext: '.next-1',
@@ -20,12 +24,16 @@
 </code></pre><script>const slider1 = new boltSlider({
 	slider: '.slider-1',
 
+	roledescription: 'слайдер',
+	slideRoledescription: 'слайд',
+
+	gap: 20,
+	currentSlide: 1,
+	speed: 500,
+
 	autoPlay: true,
 	autoplaySpeed: 3000,
 	playButton: '.play-1',
-
-	roledescription: 'слайдер',
-	slideRoledescription: 'слайд',
 
 	sliderPrew: '.prew-1',
 	sliderNext: '.next-1',

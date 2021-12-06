@@ -329,6 +329,12 @@ class boltSlider {
 			}
 		});
 
+		const focusSlider = _.slider.addEventListener('keyup', () => {
+			if (document.querySelector(':focus, :focus-visible')) {
+				_.stopAutoPlay();
+			}
+		})
+
 		const clickList = _.sliderList.addEventListener('click', () => {
 			_.stopAutoPlay();
 		});
@@ -344,7 +350,7 @@ class boltSlider {
 
 	}
 
-	stopAutoPlay(mouseout, mouseover, clickList, clickNext, clickPrew, clickPagination) {
+	stopAutoPlay(mouseout, mouseover, clickList, clickNext, clickPrew, clickPagination, focusSlider) {
 		const _ = this;
 
 		_.pauseAutoPlay(mouseout, mouseover, clickList);
@@ -355,6 +361,7 @@ class boltSlider {
 		removeEventListener('click', clickNext, false);
 		removeEventListener('click', clickPrew, false);
 		removeEventListener('click', clickPagination, false);
+		removeEventListener('keyup', focusSlider, false);
 	}
 
 	controllPlayButton() {

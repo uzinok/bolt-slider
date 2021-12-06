@@ -1,12 +1,16 @@
 const slider1 = new boltSlider({
 	slider: '.slider-1',
 
+	roledescription: 'слайдер',
+	slideRoledescription: 'слайд',
+
+	gap: 20,
+	currentSlide: 1,
+	speed: 500,
+
 	autoPlay: true,
 	autoplaySpeed: 3000,
 	playButton: '.play-1',
-
-	roledescription: 'слайдер',
-	slideRoledescription: 'слайд',
 
 	sliderPrew: '.prew-1',
 	sliderNext: '.next-1',

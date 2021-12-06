@@ -3,7 +3,7 @@
 class boltSlider {
 
 	constructor(options) {
-		let _ = this;
+		const _ = this;
 
 		// errors user options
 		if (!options) {
@@ -34,6 +34,7 @@ class boltSlider {
 		_.gap = options.gap || 0;
 		_.currentSlide = options.currentSlide || 0;
 		_.speed = options.speed || 300;
+
 		_.autoPlay = options.autoPlay || false;
 		_.autoplaySpeed = options.autoplaySpeed || 0;
 
@@ -68,7 +69,6 @@ class boltSlider {
 		_.slide = _.sliderList.querySelectorAll('.bolt-slider__content');
 		_.slideLength = _.sliderItems.length;
 		_.paginations = [];
-		_.removeActive = false;
 		_.checkAutoPlay = _.autoPlay;
 		_.setIntervalAutoPlay = false;
 
@@ -81,7 +81,7 @@ class boltSlider {
 	}
 
 	sliderInit() {
-		let _ = this;
+		const _ = this;
 
 		_.slider.classList.remove('bolt-no-js');
 		_.slider.setAttribute('aria-roledescription', _.roledescription);
@@ -117,7 +117,7 @@ class boltSlider {
 	}
 
 	setSliderSize() {
-		let _ = this;
+		const _ = this;
 
 		_.width = _.slider.offsetWidth;
 		_.sliderList.style.width = (_.width * _.slideLength) + (_.gap * _.slideLength) + 'px';
@@ -133,7 +133,7 @@ class boltSlider {
 	}
 
 	setPagination() {
-		let _ = this;
+		const _ = this;
 
 		for (let i = 0; i < _.slideLength; i++) {
 			let btn = document.createElement(_.paginationTag);
@@ -157,7 +157,7 @@ class boltSlider {
 	}
 
 	moveNext() {
-		let _ = this;
+		const _ = this;
 
 		_.sliderNext.addEventListener('click', () => {
 			_.nextSlider();
@@ -165,7 +165,7 @@ class boltSlider {
 	}
 
 	nextSlider() {
-		let _ = this;
+		const _ = this;
 		_.currentSlide++;
 
 		if (_.currentSlide >= _.slideLength) {
@@ -176,7 +176,7 @@ class boltSlider {
 	}
 
 	movePrew() {
-		let _ = this;
+		const _ = this;
 
 		_.sliderPrew.addEventListener('click', () => {
 			_.currentSlide--;
@@ -191,7 +191,7 @@ class boltSlider {
 	}
 
 	moveSlider() {
-		let _ = this;
+		const _ = this;
 
 		_.sliderList.style.transform = `translateX(-${(_.currentSlide * _.width) + (_.gap * _.currentSlide)}px)`;
 		_.sliderList.style.height = _.sliderItems[_.currentSlide].querySelector('.bolt-slider__content').offsetHeight + 'px';
@@ -208,15 +208,10 @@ class boltSlider {
 	}
 
 	updateSlide() {
-		let _ = this;
+		const _ = this;
 
-		if (_.sliderList.querySelector('.bolt-slider__item--active')) {
-
-			if (!_.checkAutoPlay) {
-				_.sliderList.querySelector('.bolt-slider__item--active').ariaLive = 'off';
-			}
-
-			_.sliderList.querySelector('.bolt-slider__item--active').classList.remove('bolt-slider__item--active');
+		if (_.sliderList.querySelector('.bolt-slider__item[aria-live="polite"]')) {
+				_.sliderList.querySelector('.bolt-slider__item[aria-live="polite"]').ariaLive = 'off';
 		}
 
 		_.sliderItems[_.currentSlide].classList.add('bolt-slider__item--active');
@@ -226,7 +221,7 @@ class boltSlider {
 	}
 
 	updatePagination() {
-		let _ = this;
+		const _ = this;
 
 		if (_.paginationWrap.querySelector('.bolt-slider__pagination-btn--active')) {
 			if (_.paginationTag == 'button') {
@@ -240,7 +235,7 @@ class boltSlider {
 	}
 
 	updateSlideNext() {
-		let _ = this;
+		const _ = this;
 
 		if (_.sliderNext.disabled == true && _.currentSlide < _.slideLength - 1) {
 			_.sliderNext.disabled = false;
@@ -251,7 +246,7 @@ class boltSlider {
 	}
 
 	updateSlidePrew() {
-		let _ = this;
+		const _ = this;
 		if (_.sliderPrew.disabled == true && _.currentSlide > 0) {
 			_.sliderPrew.disabled = false;
 		}
@@ -261,7 +256,7 @@ class boltSlider {
 	}
 
 	sliderAnimation() {
-		let _ = this;
+		const _ = this;
 
 		_.setAnimation();
 
@@ -279,19 +274,19 @@ class boltSlider {
 	}
 
 	setAnimation() {
-		let _ = this;
+		const _ = this;
 
 		_.sliderList.style.transitionDuration = `${_.speed}ms, ${_.speed}ms`;
 	}
 
 	removeAnimation() {
-		let _ = this;
+		const _ = this;
 
 		_.sliderList.style.transitionDuration = `0ms, 0ms`;
 	}
 
 	drawAutoPlay() {
-		let _ = this;
+		const _ = this;
 
 		_.setIntervalAutoPlay = setInterval(() => {
 
@@ -303,19 +298,19 @@ class boltSlider {
 		}, _.autoplaySpeed);
 	}
 
-	stopAutoPlay() {
-		let _ = this;
+	pauseAutoPlay() {
+		const _ = this;
 
 		clearInterval(_.setIntervalAutoPlay);
 	}
 
 	autoPlayControl() {
-		let _ = this;
+		const _ = this;
 
 		_.drawAutoPlay();
 
 		const mouseover = _.slider.addEventListener('mouseover', () => {
-			_.stopAutoPlay();
+			_.pauseAutoPlay();
 		});
 
 		const mouseout = _.slider.addEventListener('mouseout', () => {
@@ -325,14 +320,32 @@ class boltSlider {
 			}
 		});
 
-		const click = _.slider.addEventListener('click', () => {
+		const clickList = _.sliderList.addEventListener('click', () => {
 			_.stopAutoPlay();
-			_.checkAutoPlay = false;
-			removeEventListener('mouseover', mouseover, false);
-			removeEventListener('mouseout', mouseout, false);
-			removeEventListener('click', click, false);
+		});
+		const clickNext = _.sliderNext.addEventListener('click', () => {
+			_.stopAutoPlay();
+		});
+		const clickPrew = _.sliderPrew.addEventListener('click', () => {
+			_.stopAutoPlay();
+		});
+		const clickPagination = _.paginationWrap.addEventListener('click', () => {
+			_.stopAutoPlay();
 		});
 
+	}
+
+	stopAutoPlay(mouseout, mouseover, clickList, clickNext, clickPrew, clickPagination) {
+		const _ = this;
+
+		_.pauseAutoPlay(mouseout, mouseover, clickList);
+		_.checkAutoPlay = false;
+		removeEventListener('mouseover', mouseover, false);
+		removeEventListener('mouseout', mouseout, false);
+		removeEventListener('click', clickList, false);
+		removeEventListener('click', clickNext, false);
+		removeEventListener('click', clickPrew, false);
+		removeEventListener('click', clickPagination, false);
 	}
 
 }

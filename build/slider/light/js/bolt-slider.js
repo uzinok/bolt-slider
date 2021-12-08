@@ -89,6 +89,7 @@ var boltSlider = /*#__PURE__*/function () {
     _.paginations = [];
     _.checkAutoPlay = _.autoPlay;
     _.setIntervalAutoPlay = false;
+    _.startClientX = 0;
 
     if (_.currentSlide > _.slideLength) {
       _.currentSlide = 0;
@@ -144,6 +145,8 @@ var boltSlider = /*#__PURE__*/function () {
       if (_.playButton) {
         _.controllPlayButton();
       }
+
+      _.touthMove();
     }
   }, {
     key: "setSliderSize",
@@ -441,6 +444,68 @@ var boltSlider = /*#__PURE__*/function () {
 
           _.drawAutoPlay();
         }
+      });
+    } // касание
+
+  }, {
+    key: "touthMove",
+    value: function touthMove() {
+      var _ = this;
+
+      _.sliderList.addEventListener("touchstart", function (e) {
+        if (_.checkAutoPlay) {
+          _.stopAutoPlay();
+        }
+
+        _.startClientX = e.touches[0].clientX;
+      });
+
+      _.sliderList.addEventListener("touchmove", function (e) {
+        _.sliderItems.forEach(function (slide) {
+          slide.classList.add('bolt-slider__item--active');
+        });
+
+        _.touchMove = _.startClientX - e.touches[0].clientX;
+
+        if (_.currentSlide * _.width + _.gap * _.currentSlide + _.touchMove >= 0) {
+          if (_.currentSlide * _.width + _.gap * _.currentSlide + _.touchMove <= _.width * (_.slideLength - 1) + _.gap * (_.slideLength - 1)) {
+            _.sliderList.style.transform = "translateX(-".concat(_.currentSlide * _.width + _.gap * _.currentSlide + _.touchMove, "px)");
+          }
+        }
+      });
+
+      _.sliderList.addEventListener("touchend", function (e) {
+        if (_.touchMove < 30 && _.touchMove > -30) {
+          _.sliderAnimation();
+
+          _.moveSlider();
+        }
+
+        if (_.touchMove > 0) {
+          _.currentSlide++;
+
+          if (_.currentSlide >= _.slideLength - 1) {
+            _.currentSlide = _.slideLength - 1;
+          }
+
+          _.sliderAnimation();
+
+          _.moveSlider();
+        }
+
+        if (_.touchMove < 0) {
+          _.currentSlide--;
+
+          if (_.currentSlide < 0) {
+            _.currentSlide = 0;
+          }
+
+          _.sliderAnimation();
+
+          _.moveSlider();
+        }
+
+        _.touchMove = 0;
       });
     }
   }]);

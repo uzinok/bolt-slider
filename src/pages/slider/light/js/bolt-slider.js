@@ -78,6 +78,7 @@ class boltSlider {
 		_.paginations = [];
 		_.checkAutoPlay = _.autoPlay;
 		_.setIntervalAutoPlay = false;
+		_.startClientX = 0;
 
 		if (_.currentSlide > _.slideLength) {
 			_.currentSlide = 0;
@@ -124,6 +125,7 @@ class boltSlider {
 		if (_.playButton) {
 			_.controllPlayButton();
 		}
+		_.touthMove();
 	}
 
 	setSliderSize() {
@@ -381,5 +383,73 @@ class boltSlider {
 			}
 		})
 	}
+
+	// касание
+	touthMove() {
+		let _ = this;
+
+		_.sliderList.addEventListener("touchstart", (e) => {
+			if (_.checkAutoPlay) {
+				_.stopAutoPlay();
+			}
+			_.startClientX = e.touches[0].clientX;
+		})
+
+		_.sliderList.addEventListener("touchmove", (e) => {
+			_.sliderItems.forEach(slide => {
+				slide.classList.add('bolt-slider__item--active');
+			});
+			_.touchMove = _.startClientX - e.touches[0].clientX;
+			if (
+				((_.currentSlide * _.width) + (_.gap * _.currentSlide) + _.touchMove) >=
+				0
+			) {
+
+				if (
+					((_.currentSlide * _.width) + (_.gap * _.currentSlide) + _.touchMove) <=
+					(_.width * (_.slideLength - 1) + _.gap * (_.slideLength - 1))
+				) {
+					_.sliderList.style.transform = `translateX(-${(_.currentSlide * _.width) + (_.gap * _.currentSlide) + _.touchMove}px)`;
+				}
+			}
+
+		});
+
+		_.sliderList.addEventListener("touchend", (e) => {
+			if ((_.touchMove < 30) && _.touchMove > -30) {
+
+				_.sliderAnimation();
+				_.moveSlider();
+			}
+
+			if (_.touchMove > 0) {
+				_.currentSlide++;
+				if (_.currentSlide >= _.slideLength - 1) {
+					_.currentSlide = _.slideLength - 1;
+				}
+
+				_.sliderAnimation();
+				_.moveSlider();
+			}
+
+			if (_.touchMove < 0) {
+				_.currentSlide--;
+				if (_.currentSlide < 0) {
+					_.currentSlide = 0;
+				}
+
+				_.sliderAnimation();
+				_.moveSlider();
+			}
+
+			_.touchMove = 0;
+		})
+
+	}
+
+
+
+
+
 
 }

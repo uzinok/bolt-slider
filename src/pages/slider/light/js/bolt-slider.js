@@ -222,11 +222,15 @@ class boltSlider {
 	updateSlide() {
 		const _ = this;
 
+		_.sliderItems[_.currentSlide].classList.add('bolt-slider__item--active');
+	}
+
+	updateAriaLive() {
+		const _ = this;
+
 		if (_.sliderList.querySelector('.bolt-slider__item[aria-live="polite"]')) {
 			_.sliderList.querySelector('.bolt-slider__item[aria-live="polite"]').ariaLive = 'off';
 		}
-
-		_.sliderItems[_.currentSlide].classList.add('bolt-slider__item--active');
 		if (!_.checkAutoPlay) {
 			_.sliderItems[_.currentSlide].ariaLive = 'polite';
 		}
@@ -271,7 +275,7 @@ class boltSlider {
 		const _ = this;
 
 		_.setAnimation();
-
+		_.updateAriaLive();
 		_.sliderItems.forEach(item => {
 			item.classList.add('bolt-slider__item--active');
 		});
@@ -446,10 +450,4 @@ class boltSlider {
 		})
 
 	}
-
-
-
-
-
-
 }

@@ -260,11 +260,16 @@ var boltSlider = /*#__PURE__*/function () {
     value: function updateSlide() {
       var _ = this;
 
+      _.sliderItems[_.currentSlide].classList.add('bolt-slider__item--active');
+    }
+  }, {
+    key: "updateAriaLive",
+    value: function updateAriaLive() {
+      var _ = this;
+
       if (_.sliderList.querySelector('.bolt-slider__item[aria-live="polite"]')) {
         _.sliderList.querySelector('.bolt-slider__item[aria-live="polite"]').ariaLive = 'off';
       }
-
-      _.sliderItems[_.currentSlide].classList.add('bolt-slider__item--active');
 
       if (!_.checkAutoPlay) {
         _.sliderItems[_.currentSlide].ariaLive = 'polite';
@@ -319,6 +324,8 @@ var boltSlider = /*#__PURE__*/function () {
       var _ = this;
 
       _.setAnimation();
+
+      _.updateAriaLive();
 
       _.sliderItems.forEach(function (item) {
         item.classList.add('bolt-slider__item--active');

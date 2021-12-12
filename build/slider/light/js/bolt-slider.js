@@ -112,6 +112,8 @@ var boltSlider = /*#__PURE__*/function () {
         _.sliderItems[i].ariaLive = 'off';
 
         _.sliderItems[i].setAttribute('aria-roledescription', _.slideRoledescription);
+
+        _.sliderItems[i].setAttribute('tabindex', -1);
       }
 
       _.setSliderSize();
@@ -147,6 +149,8 @@ var boltSlider = /*#__PURE__*/function () {
       }
 
       _.touthMove();
+
+      _.moveKeyboard();
     }
   }, {
     key: "setSliderSize",
@@ -260,7 +264,13 @@ var boltSlider = /*#__PURE__*/function () {
     value: function updateSlide() {
       var _ = this;
 
+      if (_.sliderList.querySelector('[tabindex="0"]')) {
+        _.sliderList.querySelector('[tabindex="0"]').setAttribute('tabindex', -1);
+      }
+
       _.sliderItems[_.currentSlide].classList.add('bolt-slider__item--active');
+
+      _.sliderItems[_.currentSlide].setAttribute('tabindex', 0);
     }
   }, {
     key: "updateAriaLive",
@@ -452,8 +462,7 @@ var boltSlider = /*#__PURE__*/function () {
           _.drawAutoPlay();
         }
       });
-    } // касание
-
+    }
   }, {
     key: "touthMove",
     value: function touthMove() {
@@ -489,31 +498,60 @@ var boltSlider = /*#__PURE__*/function () {
         }
 
         if (_.touchMove > 0) {
-          _.currentSlide++;
-
-          if (_.currentSlide >= _.slideLength - 1) {
-            _.currentSlide = _.slideLength - 1;
-          }
-
-          _.sliderAnimation();
-
-          _.moveSlider();
+          _.nextSlide();
         }
 
         if (_.touchMove < 0) {
-          _.currentSlide--;
-
-          if (_.currentSlide < 0) {
-            _.currentSlide = 0;
-          }
-
-          _.sliderAnimation();
-
-          _.moveSlider();
+          _.prewSlide();
         }
 
         _.touchMove = 0;
       });
+    }
+  }, {
+    key: "moveKeyboard",
+    value: function moveKeyboard() {
+      var _ = this;
+
+      _.sliderList.addEventListener('keydown', function (e) {
+        if (e.keyCode == 39) {
+          _.nextSlide();
+        }
+
+        if (e.keyCode == 37) {
+          _.prewSlide();
+        }
+      });
+    }
+  }, {
+    key: "nextSlide",
+    value: function nextSlide() {
+      var _ = this;
+
+      _.currentSlide++;
+
+      if (_.currentSlide >= _.slideLength - 1) {
+        _.currentSlide = _.slideLength - 1;
+      }
+
+      _.sliderAnimation();
+
+      _.moveSlider();
+    }
+  }, {
+    key: "prewSlide",
+    value: function prewSlide() {
+      var _ = this;
+
+      _.currentSlide--;
+
+      if (_.currentSlide < 0) {
+        _.currentSlide = 0;
+      }
+
+      _.sliderAnimation();
+
+      _.moveSlider();
     }
   }]);
 

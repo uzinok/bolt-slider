@@ -97,6 +97,7 @@ class boltSlider {
 		for (let i = 0; i < _.slideLength; i++) {
 			_.sliderItems[i].ariaLive = 'off';
 			_.sliderItems[i].setAttribute('aria-roledescription', _.slideRoledescription);
+			_.sliderItems[i].setAttribute('tabindex', -1);
 		}
 
 		_.setSliderSize();
@@ -126,6 +127,7 @@ class boltSlider {
 			_.controllPlayButton();
 		}
 		_.touthMove();
+		_.moveKeyboard();
 	}
 
 	setSliderSize() {
@@ -222,7 +224,12 @@ class boltSlider {
 	updateSlide() {
 		const _ = this;
 
+		if (_.sliderList.querySelector('[tabindex="0"]')) {
+			_.sliderList.querySelector('[tabindex="0"]').setAttribute('tabindex', -1);
+		}
+
 		_.sliderItems[_.currentSlide].classList.add('bolt-slider__item--active');
+		_.sliderItems[_.currentSlide].setAttribute('tabindex', 0);
 	}
 
 	updateAriaLive() {
@@ -388,7 +395,6 @@ class boltSlider {
 		})
 	}
 
-	// касание
 	touthMove() {
 		let _ = this;
 
@@ -427,27 +433,55 @@ class boltSlider {
 			}
 
 			if (_.touchMove > 0) {
-				_.currentSlide++;
-				if (_.currentSlide >= _.slideLength - 1) {
-					_.currentSlide = _.slideLength - 1;
-				}
-
-				_.sliderAnimation();
-				_.moveSlider();
+				_.nextSlide();
 			}
 
 			if (_.touchMove < 0) {
-				_.currentSlide--;
-				if (_.currentSlide < 0) {
-					_.currentSlide = 0;
-				}
-
-				_.sliderAnimation();
-				_.moveSlider();
+				_.prewSlide();
 			}
 
 			_.touchMove = 0;
 		})
 
 	}
+
+	moveKeyboard() {
+		let _ = this;
+
+		_.sliderList.addEventListener('keydown', e => {
+
+			if (e.keyCode == 39) {
+				_.nextSlide();
+			}
+
+			if (e.keyCode == 37) {
+				_.prewSlide();
+			}
+		});
+	}
+
+	nextSlide() {
+		let _ = this;
+
+		_.currentSlide++;
+		if (_.currentSlide >= _.slideLength - 1) {
+			_.currentSlide = _.slideLength - 1;
+		}
+
+		_.sliderAnimation();
+		_.moveSlider();
+	}
+
+	prewSlide() {
+		let _ = this;
+
+		_.currentSlide--;
+		if (_.currentSlide < 0) {
+			_.currentSlide = 0;
+		}
+
+		_.sliderAnimation();
+		_.moveSlider();
+	}
+
 }

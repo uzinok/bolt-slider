@@ -1,6 +1,6 @@
 /*! https://github.com/uzinok/bolt-slider */
 
-class boltSlider {
+class BoltSlider {
 
 	constructor(options) {
 		const _ = this;
@@ -403,12 +403,13 @@ class boltSlider {
 				_.stopAutoPlay();
 			}
 			_.startClientX = e.touches[0].clientX;
-		})
 
-		_.sliderList.addEventListener("touchmove", (e) => {
 			_.sliderItems.forEach(slide => {
 				slide.classList.add('bolt-slider__item--active');
 			});
+		})
+
+		_.sliderList.addEventListener("touchmove", (e) => {
 			_.touchMove = _.startClientX - e.touches[0].clientX;
 			if (
 				((_.currentSlide * _.width) + (_.gap * _.currentSlide) + _.touchMove) >=
@@ -422,12 +423,12 @@ class boltSlider {
 					_.sliderList.style.transform = `translateX(-${(_.currentSlide * _.width) + (_.gap * _.currentSlide) + _.touchMove}px)`;
 				}
 			}
-
 		});
 
 		_.sliderList.addEventListener("touchend", (e) => {
-			if ((_.touchMove < 30) && _.touchMove > -30) {
+			e.preventDefault();
 
+			if ((_.touchMove < 30) && _.touchMove > -30) {
 				_.sliderAnimation();
 				_.moveSlider();
 			}

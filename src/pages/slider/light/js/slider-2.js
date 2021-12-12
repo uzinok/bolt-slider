@@ -1,5 +1,5 @@
 window.addEventListener('load', () => {
-	const slider2 = new boltSlider({
+	const slider2 = new BoltSlider({
 		slider: '.slider-2',
 
 		gap: 40,

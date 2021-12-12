@@ -7,9 +7,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 /*! https://github.com/uzinok/bolt-slider */
-var boltSlider = /*#__PURE__*/function () {
-  function boltSlider(options) {
-    _classCallCheck(this, boltSlider);
+var BoltSlider = /*#__PURE__*/function () {
+  function BoltSlider(options) {
+    _classCallCheck(this, BoltSlider);
 
     var _ = this; // errors user options
 
@@ -99,7 +99,7 @@ var boltSlider = /*#__PURE__*/function () {
     _.sliderInit();
   }
 
-  _createClass(boltSlider, [{
+  _createClass(BoltSlider, [{
     key: "sliderInit",
     value: function sliderInit() {
       var _ = this;
@@ -474,13 +474,13 @@ var boltSlider = /*#__PURE__*/function () {
         }
 
         _.startClientX = e.touches[0].clientX;
-      });
 
-      _.sliderList.addEventListener("touchmove", function (e) {
         _.sliderItems.forEach(function (slide) {
           slide.classList.add('bolt-slider__item--active');
         });
+      });
 
+      _.sliderList.addEventListener("touchmove", function (e) {
         _.touchMove = _.startClientX - e.touches[0].clientX;
 
         if (_.currentSlide * _.width + _.gap * _.currentSlide + _.touchMove >= 0) {
@@ -491,6 +491,8 @@ var boltSlider = /*#__PURE__*/function () {
       });
 
       _.sliderList.addEventListener("touchend", function (e) {
+        e.preventDefault();
+
         if (_.touchMove < 30 && _.touchMove > -30) {
           _.sliderAnimation();
 
@@ -555,5 +557,5 @@ var boltSlider = /*#__PURE__*/function () {
     }
   }]);
 
-  return boltSlider;
+  return BoltSlider;
 }();

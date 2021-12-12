@@ -1,4 +1,4 @@
-const slider1 = new boltSlider({
+const slider1 = new BoltSlider({
 	slider: '.slider-1',
 
 	roledescription: 'слайдер',

@@ -1,4 +1,4 @@
-const slider3 = new boltSlider({
+const slider3 = new BoltSlider({
 	slider: '.slider-3',
 
 	sliderPrew: '.prew-3',

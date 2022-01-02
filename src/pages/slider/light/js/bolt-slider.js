@@ -411,18 +411,7 @@ class BoltSlider {
 
 		_.sliderList.addEventListener("touchmove", (e) => {
 			_.touchMove = _.startClientX - e.touches[0].clientX;
-			if (
-				((_.currentSlide * _.width) + (_.gap * _.currentSlide) + _.touchMove) >=
-				0
-			) {
 
-				if (
-					((_.currentSlide * _.width) + (_.gap * _.currentSlide) + _.touchMove) <=
-					(_.width * (_.slideLength - 1) + _.gap * (_.slideLength - 1))
-				) {
-					_.sliderList.style.transform = `translateX(-${(_.currentSlide * _.width) + (_.gap * _.currentSlide) + _.touchMove}px)`;
-				}
-			}
 		});
 
 		_.sliderList.addEventListener("touchend", (e) => {

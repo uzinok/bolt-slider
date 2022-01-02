@@ -4,7 +4,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 /*! https://github.com/uzinok/bolt-slider */
 var BoltSlider = /*#__PURE__*/function () {
@@ -482,12 +482,6 @@ var BoltSlider = /*#__PURE__*/function () {
 
       _.sliderList.addEventListener("touchmove", function (e) {
         _.touchMove = _.startClientX - e.touches[0].clientX;
-
-        if (_.currentSlide * _.width + _.gap * _.currentSlide + _.touchMove >= 0) {
-          if (_.currentSlide * _.width + _.gap * _.currentSlide + _.touchMove <= _.width * (_.slideLength - 1) + _.gap * (_.slideLength - 1)) {
-            _.sliderList.style.transform = "translateX(-".concat(_.currentSlide * _.width + _.gap * _.currentSlide + _.touchMove, "px)");
-          }
-        }
       });
 
       _.sliderList.addEventListener("touchend", function (e) {

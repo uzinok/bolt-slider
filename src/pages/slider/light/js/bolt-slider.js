@@ -375,6 +375,7 @@ class BoltSlider {
 		removeEventListener('click', clickPrew, false);
 		removeEventListener('click', clickPagination, false);
 		removeEventListener('keyup', focusSlider, false);
+		_.updateAriaLive();
 	}
 
 	controllPlayButton() {

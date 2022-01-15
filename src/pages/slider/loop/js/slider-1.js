@@ -10,7 +10,7 @@ const slider1 = new BoltSlider({
 
 	loop: true,
 
-	// autoPlay: true,
+	autoPlay: true,
 	autoplaySpeed: 3000,
 	playButton: '.play-1',
 

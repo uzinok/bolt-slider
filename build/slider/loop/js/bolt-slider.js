@@ -49,6 +49,7 @@ var BoltSlider = /*#__PURE__*/function () {
     _.gap = options.gap || 0;
     _.currentSlide = options.currentSlide || 0;
     _.speed = options.speed || 300;
+    _.loop = options.loop || false;
     _.autoPlay = options.autoPlay || false;
     _.autoplaySpeed = options.autoplaySpeed || 0; // playClass for slider options
 
@@ -91,6 +92,10 @@ var BoltSlider = /*#__PURE__*/function () {
     _.setIntervalAutoPlay = false;
     _.startClientX = 0;
 
+    if (_.loop) {
+      _.currentSlide += 1;
+    }
+
     if (_.currentSlide > _.slideLength) {
       _.currentSlide = 0;
     } // init slider
@@ -107,6 +112,10 @@ var BoltSlider = /*#__PURE__*/function () {
       _.slider.classList.remove('bolt-no-js');
 
       _.slider.setAttribute('aria-roledescription', _.roledescription);
+
+      if (_.loop) {
+        _.createLoop();
+      }
 
       for (var i = 0; i < _.slideLength; i++) {
         _.sliderItems[i].ariaLive = 'off';
@@ -174,6 +183,8 @@ var BoltSlider = /*#__PURE__*/function () {
     value: function setPagination() {
       var _ = this;
 
+      var count = _.loop ? _.slideLength - 2 : _.slideLength;
+
       var _loop = function _loop(i) {
         var btn = document.createElement(_.paginationTag);
         btn.classList.add(_.paginationClass);
@@ -183,7 +194,7 @@ var BoltSlider = /*#__PURE__*/function () {
         if (_.paginationTag == 'button') {
           btn.ariaLabel = _.paginationAria + ' ' + (i + 1) + '.';
           btn.addEventListener('click', function () {
-            _.currentSlide = i;
+            _.currentSlide = _.loop ? i + 1 : i;
 
             _.sliderAnimation();
 
@@ -194,7 +205,7 @@ var BoltSlider = /*#__PURE__*/function () {
         _.paginations.push(btn);
       };
 
-      for (var i = 0; i < _.slideLength; i++) {
+      for (var i = 0; i < count; i++) {
         _loop(i);
       }
     }
@@ -215,7 +226,24 @@ var BoltSlider = /*#__PURE__*/function () {
       _.currentSlide++;
 
       if (_.currentSlide >= _.slideLength) {
-        return _.currentSlide = _.slideLength - 1;
+        _.currentSlide = _.slideLength - 1;
+      }
+
+      if (_.loop && _.currentSlide >= _.slideLength - 1) {
+        _.sliderAnimation();
+
+        _.moveSlider();
+
+        setTimeout(function () {
+          _.currentSlide = 1;
+
+          _.updateSlide();
+
+          _.updateAriaLive();
+
+          _.moveSlider();
+        }, _.speed + 50);
+        return;
       }
 
       _.sliderAnimation();
@@ -228,16 +256,41 @@ var BoltSlider = /*#__PURE__*/function () {
       var _ = this;
 
       _.sliderPrew.addEventListener('click', function () {
-        _.currentSlide--;
+        _.prewSlide();
+      });
+    }
+  }, {
+    key: "prewSlide",
+    value: function prewSlide() {
+      var _ = this;
 
-        if (_.currentSlide < 0) {
-          return _.currentSlide = 0;
-        }
+      _.currentSlide--;
+      console.log(_.currentSlide <= 1);
 
+      if (_.loop && _.currentSlide <= 0) {
         _.sliderAnimation();
 
         _.moveSlider();
-      });
+
+        setTimeout(function () {
+          _.currentSlide = _.slideLength - 2;
+
+          _.updateSlide();
+
+          _.updateAriaLive();
+
+          _.moveSlider();
+        }, _.speed + 50);
+        return;
+      }
+
+      if (_.currentSlide < 0) {
+        _.currentSlide = 0;
+      }
+
+      _.sliderAnimation();
+
+      _.moveSlider();
     }
   }, {
     key: "moveSlider",
@@ -298,9 +351,31 @@ var BoltSlider = /*#__PURE__*/function () {
         _.paginationWrap.querySelector('.bolt-slider__pagination-btn--active').classList.remove(_.paginationClass + '--active');
       }
 
-      _.paginations[_.currentSlide].disabled = true;
+      if (_.loop) {
+        if (_.currentSlide >= _.slideLength - 1) {
+          _.paginations[0].disabled = true;
 
-      _.paginations[_.currentSlide].classList.add(_.paginationClass + '--active');
+          _.paginations[0].classList.add(_.paginationClass + '--active');
+
+          return;
+        }
+
+        if (_.currentSlide <= 0) {
+          _.paginations[_.slideLength - 3].disabled = true;
+
+          _.paginations[_.slideLength - 3].classList.add(_.paginationClass + '--active');
+
+          return;
+        }
+
+        _.paginations[_.currentSlide - 1].disabled = true;
+
+        _.paginations[_.currentSlide - 1].classList.add(_.paginationClass + '--active');
+      } else {
+        _.paginations[_.currentSlide].disabled = true;
+
+        _.paginations[_.currentSlide].classList.add(_.paginationClass + '--active');
+      }
     }
   }, {
     key: "updateSlideNext",
@@ -486,9 +561,7 @@ var BoltSlider = /*#__PURE__*/function () {
         _.touchMove = _.startClientX - e.touches[0].clientX;
       });
 
-      _.sliderList.addEventListener("touchend", function (e) {
-        e.preventDefault();
-
+      _.sliderList.addEventListener("touchend", function () {
         if (_.touchMove < 30 && _.touchMove > -30) {
           _.sliderAnimation();
 
@@ -496,7 +569,7 @@ var BoltSlider = /*#__PURE__*/function () {
         }
 
         if (_.touchMove > 0) {
-          _.nextSlide();
+          _.nextSlider();
         }
 
         if (_.touchMove < 0) {
@@ -522,34 +595,26 @@ var BoltSlider = /*#__PURE__*/function () {
       });
     }
   }, {
-    key: "nextSlide",
-    value: function nextSlide() {
+    key: "createLoop",
+    value: function createLoop() {
       var _ = this;
 
-      _.currentSlide++;
+      var firstSlide = _.sliderItems[0].cloneNode(true);
 
-      if (_.currentSlide >= _.slideLength - 1) {
-        _.currentSlide = _.slideLength - 1;
-      }
+      var lastSlide = _.sliderItems[_.slideLength - 1].cloneNode(true);
 
-      _.sliderAnimation();
+      firstSlide.ariaHidden = true;
+      lastSlide.ariaHidden = true;
 
-      _.moveSlider();
-    }
-  }, {
-    key: "prewSlide",
-    value: function prewSlide() {
-      var _ = this;
+      _.sliderList.append(firstSlide);
 
-      _.currentSlide--;
+      _.sliderList.prepend(lastSlide);
 
-      if (_.currentSlide < 0) {
-        _.currentSlide = 0;
-      }
+      _.sliderItems.push(firstSlide);
 
-      _.sliderAnimation();
+      _.sliderItems.unshift(lastSlide);
 
-      _.moveSlider();
+      _.slideLength += 2;
     }
   }]);
 

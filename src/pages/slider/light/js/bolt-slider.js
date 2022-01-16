@@ -79,6 +79,7 @@ class BoltSlider {
 		_.checkAutoPlay = _.autoPlay;
 		_.setIntervalAutoPlay = false;
 		_.startClientX = 0;
+		_.timeOutAnimation;
 
 		if (_.currentSlide > _.slideLength) {
 			_.currentSlide = 0;
@@ -204,6 +205,18 @@ class BoltSlider {
 		})
 	}
 
+	prewSlide() {
+		let _ = this;
+
+		_.currentSlide--;
+		if (_.currentSlide < 0) {
+			_.currentSlide = 0;
+		}
+
+		_.sliderAnimation();
+		_.moveSlider();
+	}
+
 	moveSlider() {
 		const _ = this;
 
@@ -281,13 +294,15 @@ class BoltSlider {
 	sliderAnimation() {
 		const _ = this;
 
+		clearTimeout(_.timeOutAnimation);
+
 		_.setAnimation();
 		_.updateAriaLive();
 		_.sliderItems.forEach(item => {
 			item.classList.add('bolt-slider__item--active');
 		});
 
-		setTimeout(() => {
+		_.timeOutAnimation = setTimeout(() => {
 			_.sliderItems.forEach(item => {
 				item.classList.remove('bolt-slider__item--active');
 			});
@@ -424,7 +439,7 @@ class BoltSlider {
 			}
 
 			if (_.touchMove > 0) {
-				_.nextSlide();
+				_.nextSlider();
 			}
 
 			if (_.touchMove < 0) {
@@ -449,30 +464,6 @@ class BoltSlider {
 				_.prewSlide();
 			}
 		});
-	}
-
-	nextSlide() {
-		let _ = this;
-
-		_.currentSlide++;
-		if (_.currentSlide >= _.slideLength - 1) {
-			_.currentSlide = _.slideLength - 1;
-		}
-
-		_.sliderAnimation();
-		_.moveSlider();
-	}
-
-	prewSlide() {
-		let _ = this;
-
-		_.currentSlide--;
-		if (_.currentSlide < 0) {
-			_.currentSlide = 0;
-		}
-
-		_.sliderAnimation();
-		_.moveSlider();
 	}
 
 }

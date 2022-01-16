@@ -91,6 +91,7 @@ var BoltSlider = /*#__PURE__*/function () {
     _.checkAutoPlay = _.autoPlay;
     _.setIntervalAutoPlay = false;
     _.startClientX = 0;
+    _.timeOutAnimation;
 
     if (_.loop) {
       _.currentSlide += 1;
@@ -408,6 +409,8 @@ var BoltSlider = /*#__PURE__*/function () {
     value: function sliderAnimation() {
       var _ = this;
 
+      clearTimeout(_.timeOutAnimation);
+
       _.setAnimation();
 
       _.updateAriaLive();
@@ -416,7 +419,7 @@ var BoltSlider = /*#__PURE__*/function () {
         item.classList.add('bolt-slider__item--active');
       });
 
-      setTimeout(function () {
+      _.timeOutAnimation = setTimeout(function () {
         _.sliderItems.forEach(function (item) {
           item.classList.remove('bolt-slider__item--active');
         });

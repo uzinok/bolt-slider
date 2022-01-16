@@ -81,6 +81,7 @@ class BoltSlider {
 		_.checkAutoPlay = _.autoPlay;
 		_.setIntervalAutoPlay = false;
 		_.startClientX = 0;
+		_.timeOutAnimation;
 
 		if (_.loop) {
 			_.currentSlide += 1;
@@ -345,13 +346,15 @@ class BoltSlider {
 	sliderAnimation() {
 		const _ = this;
 
+		clearTimeout(_.timeOutAnimation);
+
 		_.setAnimation();
 		_.updateAriaLive();
 		_.sliderItems.forEach(item => {
 			item.classList.add('bolt-slider__item--active');
 		});
 
-		setTimeout(() => {
+		_.timeOutAnimation = setTimeout(() => {
 			_.sliderItems.forEach(item => {
 				item.classList.remove('bolt-slider__item--active');
 			});

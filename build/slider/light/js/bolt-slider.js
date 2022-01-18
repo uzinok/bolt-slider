@@ -145,10 +145,6 @@ var BoltSlider = /*#__PURE__*/function () {
         _.autoPlayControl();
       }
 
-      if (_.playButton) {
-        _.controllPlayButton();
-      }
-
       _.touthMove();
 
       _.moveKeyboard();
@@ -384,104 +380,13 @@ var BoltSlider = /*#__PURE__*/function () {
       _.sliderList.style.transitionDuration = "0ms, 0ms";
     }
   }, {
-    key: "drawAutoPlay",
-    value: function drawAutoPlay() {
-      var _ = this;
-
-      _.setIntervalAutoPlay = setInterval(function () {
-        if (_.currentSlide == _.slideLength - 1) {
-          _.currentSlide = -1;
-        }
-
-        _.nextSlider();
-      }, _.autoplaySpeed);
-    }
-  }, {
-    key: "pauseAutoPlay",
-    value: function pauseAutoPlay() {
-      var _ = this;
-
-      clearInterval(_.setIntervalAutoPlay);
-    }
-  }, {
-    key: "autoPlayControl",
-    value: function autoPlayControl() {
-      var _ = this;
-
-      _.drawAutoPlay();
-
-      var mouseover = _.slider.addEventListener('mouseover', function () {
-        _.pauseAutoPlay();
-      });
-
-      var mouseout = _.slider.addEventListener('mouseout', function () {
-        if (_.checkAutoPlay) {
-          _.drawAutoPlay();
-        }
-      });
-
-      var focusSlider = _.slider.addEventListener('keyup', function () {
-        if (document.querySelector(':focus, :focus-visible')) {
-          _.stopAutoPlay();
-        }
-      });
-
-      var clickList = _.sliderList.addEventListener('click', function () {
-        _.stopAutoPlay();
-      });
-
-      var clickNext = _.sliderNext.addEventListener('click', function () {
-        _.stopAutoPlay();
-      });
-
-      var clickPrew = _.sliderPrew.addEventListener('click', function () {
-        _.stopAutoPlay();
-      });
-
-      var clickPagination = _.paginationWrap.addEventListener('click', function () {
-        _.stopAutoPlay();
-      });
-    }
-  }, {
-    key: "stopAutoPlay",
-    value: function stopAutoPlay(mouseout, mouseover, clickList, clickNext, clickPrew, clickPagination, focusSlider) {
-      var _ = this;
-
-      _.pauseAutoPlay(mouseout, mouseover, clickList);
-
-      _.checkAutoPlay = false;
-      removeEventListener('mouseover', mouseover, false);
-      removeEventListener('mouseout', mouseout, false);
-      removeEventListener('click', clickList, false);
-      removeEventListener('click', clickNext, false);
-      removeEventListener('click', clickPrew, false);
-      removeEventListener('click', clickPagination, false);
-      removeEventListener('keyup', focusSlider, false);
-
-      _.updateAriaLive();
-    }
-  }, {
-    key: "controllPlayButton",
-    value: function controllPlayButton() {
+    key: "togglePlayButton",
+    value: function togglePlayButton() {
       var _ = this;
 
       _.playButton.classList.toggle(_.playClass + '--play');
 
-      _.playButton.addEventListener('click', function () {
-        _.playButton.classList.toggle(_.playClass + '--play');
-
-        _.playButton.classList.toggle(_.playClass + '--paused');
-
-        if (_.checkAutoPlay) {
-          _.checkAutoPlay = false;
-
-          _.stopAutoPlay();
-        } else {
-          _.checkAutoPlay = true;
-
-          _.drawAutoPlay();
-        }
-      });
+      _.playButton.classList.toggle(_.playClass + '--paused');
     }
   }, {
     key: "touthMove",
@@ -489,10 +394,6 @@ var BoltSlider = /*#__PURE__*/function () {
       var _ = this;
 
       _.sliderList.addEventListener("touchstart", function (e) {
-        if (_.checkAutoPlay) {
-          _.stopAutoPlay();
-        }
-
         _.startClientX = e.touches[0].clientX;
 
         _.sliderItems.forEach(function (slide) {
@@ -538,6 +439,106 @@ var BoltSlider = /*#__PURE__*/function () {
           _.prewSlide();
         }
       });
+    }
+  }, {
+    key: "autoPlayControl",
+    value: function autoPlayControl() {
+      var _ = this;
+
+      var mouseCheck = false;
+
+      var drawAutoPlay = function drawAutoPlay() {
+        _.setIntervalAutoPlay = setInterval(function () {
+          if (_.currentSlide == _.slideLength - 1) {
+            _.currentSlide = -1;
+          }
+
+          _.nextSlider();
+        }, _.autoplaySpeed);
+
+        if (!_.checkAutoPlay) {
+          _.checkAutoPlay = true;
+        }
+      };
+
+      var pauseAutoPlay = function pauseAutoPlay() {
+        _.checkAutoPlay = false;
+        clearInterval(_.setIntervalAutoPlay);
+      };
+
+      drawAutoPlay();
+
+      _.slider.addEventListener('mouseout', function () {
+        console.log('mouseout', mouseCheck);
+
+        if (mouseCheck) {
+          mouseCheck = false;
+          drawAutoPlay();
+        }
+      });
+
+      _.slider.addEventListener('mouseover', function () {
+        mouseCheck = true;
+        pauseAutoPlay();
+      });
+
+      _.slider.addEventListener('keyup', function () {
+        if (document.querySelector(':focus, :focus-visible')) {
+          pauseAutoPlay();
+
+          _.togglePlayButton();
+        }
+      });
+
+      _.sliderList.addEventListener('click', function () {
+        pauseAutoPlay();
+
+        _.togglePlayButton();
+      });
+
+      _.sliderNext.addEventListener('click', function () {
+        pauseAutoPlay();
+
+        _.togglePlayButton();
+      });
+
+      _.sliderPrew.addEventListener('click', function () {
+        pauseAutoPlay();
+
+        _.togglePlayButton();
+      });
+
+      _.paginationWrap.addEventListener('click', function () {
+        pauseAutoPlay();
+
+        _.togglePlayButton();
+      });
+
+      _.sliderList.addEventListener("touchstart", function () {
+        if (_.checkAutoPlay) {
+          pauseAutoPlay();
+
+          _.togglePlayButton();
+        }
+      });
+
+      if (_.playButton) {
+        _.playClass = _.playClass.substring(1);
+
+        _.playButton.classList.toggle(_.playClass + '--play');
+
+        _.playButton.addEventListener('click', function () {
+          _.togglePlayButton();
+
+          if (_.checkAutoPlay) {
+            _.checkAutoPlay = false;
+            pauseAutoPlay();
+          } else {
+            _.checkAutoPlay = true;
+            drawAutoPlay();
+          }
+        });
+      }
     }
   }]);
 

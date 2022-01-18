@@ -124,9 +124,6 @@ class BoltSlider {
 		if (_.checkAutoPlay) {
 			_.autoPlayControl();
 		}
-		if (_.playButton) {
-			_.controllPlayButton();
-		}
 		_.touthMove();
 		_.moveKeyboard();
 	}
@@ -323,107 +320,23 @@ class BoltSlider {
 		_.sliderList.style.transitionDuration = `0ms, 0ms`;
 	}
 
-	drawAutoPlay() {
+	togglePlayButton() {
 		const _ = this;
 
-		_.setIntervalAutoPlay = setInterval(() => {
-
-			if (_.currentSlide == _.slideLength - 1) {
-				_.currentSlide = -1;
-			}
-
-			_.nextSlider();
-		}, _.autoplaySpeed);
-	}
-
-	pauseAutoPlay() {
-		const _ = this;
-
-		clearInterval(_.setIntervalAutoPlay);
-	}
-
-	autoPlayControl() {
-		const _ = this;
-
-		_.drawAutoPlay();
-
-		const mouseover = _.slider.addEventListener('mouseover', () => {
-			_.pauseAutoPlay();
-		});
-
-		const mouseout = _.slider.addEventListener('mouseout', () => {
-			if (_.checkAutoPlay) {
-				_.drawAutoPlay();
-			}
-		});
-
-		const focusSlider = _.slider.addEventListener('keyup', () => {
-			if (document.querySelector(':focus, :focus-visible')) {
-				_.stopAutoPlay();
-			}
-		})
-
-		const clickList = _.sliderList.addEventListener('click', () => {
-			_.stopAutoPlay();
-		});
-		const clickNext = _.sliderNext.addEventListener('click', () => {
-			_.stopAutoPlay();
-		});
-		const clickPrew = _.sliderPrew.addEventListener('click', () => {
-			_.stopAutoPlay();
-		});
-		const clickPagination = _.paginationWrap.addEventListener('click', () => {
-			_.stopAutoPlay();
-		});
-
-	}
-
-	stopAutoPlay(mouseout, mouseover, clickList, clickNext, clickPrew, clickPagination, focusSlider) {
-		const _ = this;
-
-		_.pauseAutoPlay(mouseout, mouseover, clickList);
-		_.checkAutoPlay = false;
-		removeEventListener('mouseover', mouseover, false);
-		removeEventListener('mouseout', mouseout, false);
-		removeEventListener('click', clickList, false);
-		removeEventListener('click', clickNext, false);
-		removeEventListener('click', clickPrew, false);
-		removeEventListener('click', clickPagination, false);
-		removeEventListener('keyup', focusSlider, false);
-		_.updateAriaLive();
-	}
-
-	controllPlayButton() {
-		let _ = this;
-		_.playButton.classList.toggle(_.playClass + '--play');
-
-		_.playButton.addEventListener('click', () => {
-			_.playButton.classList.toggle(_.playClass + '--play');
-			_.playButton.classList.toggle(_.playClass + '--paused');
-
-			if (_.checkAutoPlay) {
-				_.checkAutoPlay = false;
-				_.stopAutoPlay();
-			} else {
-				_.checkAutoPlay = true;
-				_.drawAutoPlay();
-			}
-		})
+		_.playButton.classList.toggle((_.playClass + '--play'));
+		_.playButton.classList.toggle((_.playClass + '--paused'));
 	}
 
 	touthMove() {
 		let _ = this;
 
 		_.sliderList.addEventListener("touchstart", (e) => {
-			if (_.checkAutoPlay) {
-				_.stopAutoPlay();
-			}
 			_.startClientX = e.touches[0].clientX;
 
 			_.sliderItems.forEach(slide => {
 				slide.classList.add('bolt-slider__item--active');
 			});
-		})
+		});
 
 		_.sliderList.addEventListener("touchmove", (e) => {
 			_.touchMove = _.startClientX - e.touches[0].clientX;
@@ -464,6 +377,94 @@ class BoltSlider {
 				_.prewSlide();
 			}
 		});
+	}
+
+	autoPlayControl() {
+		const _ = this;
+		let mouseCheck = false;
+
+		const drawAutoPlay = () => {
+
+			_.setIntervalAutoPlay = setInterval(() => {
+
+				if (_.currentSlide == _.slideLength - 1) {
+					_.currentSlide = -1;
+				}
+
+				_.nextSlider();
+			}, _.autoplaySpeed);
+
+			if (!_.checkAutoPlay) {
+				_.checkAutoPlay = true;
+			}
+		}
+
+		const pauseAutoPlay = () => {
+			_.checkAutoPlay = false;
+			clearInterval(_.setIntervalAutoPlay);
+		}
+
+		drawAutoPlay();
+
+		_.slider.addEventListener('mouseout', () => {
+			console.log('mouseout', mouseCheck);
+			if (mouseCheck) {
+				mouseCheck = false;
+				drawAutoPlay();
+			}
+		});
+		_.slider.addEventListener('mouseover', () => {
+			mouseCheck = true;
+			pauseAutoPlay();
+		});
+
+		_.slider.addEventListener('keyup', () => {
+			if (document.querySelector(':focus, :focus-visible')) {
+				pauseAutoPlay();
+			_.togglePlayButton();
+			}
+		});
+		_.sliderList.addEventListener('click', () => {
+			pauseAutoPlay();
+			_.togglePlayButton();
+		});
+		_.sliderNext.addEventListener('click', () => {
+			pauseAutoPlay();
+			_.togglePlayButton();
+		});
+		_.sliderPrew.addEventListener('click', () => {
+			pauseAutoPlay();
+			_.togglePlayButton();
+		});
+		_.paginationWrap.addEventListener('click', () => {
+			pauseAutoPlay();
+			_.togglePlayButton();
+		});
+		_.sliderList.addEventListener("touchstart", () => {
+			if (_.checkAutoPlay) {
+				pauseAutoPlay();
+				_.togglePlayButton();
+			}
+		});
+
+		if (_.playButton) {
+			_.playClass = _.playClass.substring(1);
+
+			_.playButton.classList.toggle(_.playClass + '--play');
+
+			_.playButton.addEventListener('click', () => {
+				_.togglePlayButton();
+
+				if (_.checkAutoPlay) {
+					_.checkAutoPlay = false;
+					pauseAutoPlay();
+				} else {
+					_.checkAutoPlay = true;
+					drawAutoPlay();
+				}
+			});
+		}
+
 	}
 
 }
